@@ -1,0 +1,152 @@
+import { lazy, Suspense, useLayoutEffect, useState, type ReactNode } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import Hero from './components/Hero';
+import AboutSection from './components/AboutSection';
+import ClientsSection from './components/ClientsSection';
+import CommentsSection from './components/CommentsSection';
+import LocationSection from './components/LocationSection';
+import Footer from './components/Footer';
+import CatalogPage from './components/CatalogPage';
+import LegalPage from './components/LegalPage';
+import CookieConsent from './components/CookieConsent';
+import AuthPage from './components/auth/AuthPage';
+import AccountPage from './components/account/AccountPage';
+import CartPage from './components/order/CartPage';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+
+// Las 6 páginas nuevas se cargan bajo demanda (code-splitting) — evita que
+// alguien que solo entra al inicio tenga que descargar los 8 artículos del
+// blog y el resto de secciones nuevas de una sola vez.
+const LegalPageRoute = lazy(() => import('./components/layout/LegalPageRoute'));
+const FaqPage = lazy(() => import('./components/faq/FaqPage'));
+const GalleryPage = lazy(() => import('./components/gallery/GalleryPage'));
+const SizeGuidePage = lazy(() => import('./components/sizes/SizeGuidePage'));
+const ClientsPage = lazy(() => import('./components/clients/ClientsPage'));
+const BlogIndexPage = lazy(() => import('./components/blog/BlogIndexPage'));
+const BlogPostPage = lazy(() => import('./components/blog/BlogPostPage'));
+
+function RouteFallback() {
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center" style={{ backgroundColor: '#FAF7F2' }}>
+      <div
+        className="w-8 h-8 rounded-full border-2 border-black/10 animate-spin"
+        style={{ borderTopColor: '#C9973F' }}
+        role="status"
+        aria-label="Cargando"
+      />
+    </div>
+  );
+}
+
+/** Cada ruta nueva comienza arriba, sin heredar el scroll de la página anterior. */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
+type View = 'hero' | 'catalog' | 'legal' | 'auth' | 'account' | 'cart';
+
+function AppShell() {
+  const { user } = useAuth();
+  const [view, setView] = useState<View>('hero');
+  const [authReturnView, setAuthReturnView] = useState<View>('hero');
+  const [legalTarget, setLegalTarget] = useState<string | undefined>(undefined);
+
+  // Catálogo, acceso, cuenta y pedido son vistas internas de la ruta principal;
+  // también deben empezar arriba cuando se cambia entre ellas.
+  useLayoutEffect(() => {
+    if (view === 'legal' && legalTarget) return;
+    window.scrollTo(0, 0);
+  }, [view, legalTarget]);
+
+  const openLegal = (sectionId?: string) => {
+    setLegalTarget(sectionId);
+    setView('legal');
+  };
+
+  const goToAuth = (returnView: View) => {
+    setAuthReturnView(returnView);
+    setView('auth');
+  };
+
+  const openAccount = () => {
+    if (user) setView('account');
+    else goToAuth('account');
+  };
+
+  let page: ReactNode;
+  if (view === 'catalog') {
+    page = <CatalogPage onBack={() => setView('hero')} onOpenAccount={openAccount} onOpenCart={() => setView('cart')} />;
+  } else if (view === 'legal') {
+    page = <LegalPage onBack={() => setView('hero')} scrollToId={legalTarget} />;
+  } else if (view === 'auth') {
+    // If they cancel out of login/register without actually signing in,
+    // never send them to a view that requires a user (like "account") —
+    // that would render blank. Fall back to the catalog instead.
+    const authBackTarget = authReturnView === 'account' && !user ? 'catalog' : authReturnView;
+    page = <AuthPage onBack={() => setView(authBackTarget)} onAuthenticated={() => setView(authReturnView)} />;
+  } else if (view === 'account') {
+    page = <AccountPage onBack={() => setView('catalog')} />;
+  } else if (view === 'cart') {
+    page = (
+      <CartPage
+        onBack={() => setView('catalog')}
+        onRequireAuth={() => goToAuth('cart')}
+        onOpenCatalog={() => setView('catalog')}
+      />
+    );
+  } else {
+    page = (
+      <>
+        <Hero onOpenCatalog={() => setView('catalog')} />
+        <AboutSection />
+        <LocationSection />
+        <ClientsSection />
+        <CommentsSection onRequireAuth={() => goToAuth('hero')} />
+        <Footer onOpenLegal={openLegal} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {page}
+      <CookieConsent onOpenLegal={openLegal} />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/legal" element={<LegalPageRoute />} />
+              <Route path="/preguntas-frecuentes" element={<FaqPage />} />
+              <Route path="/galeria" element={<GalleryPage />} />
+              <Route path="/guia-de-tallas" element={<SizeGuidePage />} />
+              <Route path="/clientes" element={<ClientsPage />} />
+              <Route path="/blog" element={<BlogIndexPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+              {/* Todo lo demás (inicio, catálogo, carrito, cuenta, legal) sigue
+                  funcionando exactamente igual que antes, como una sola vista
+                  interna de AppShell — no se tocó su comportamiento. */}
+              <Route path="/*" element={<AppShell />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
