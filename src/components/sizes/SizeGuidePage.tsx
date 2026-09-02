@@ -192,25 +192,26 @@ export default function SizeGuidePage() {
         eyebrow="Antes de pedir"
         title="Guía de tallas"
         description="Tablas de referencia por tipo de prenda, cómo medirte bien, qué tejido conviene para bordar y dónde va el bordado en cada prenda."
-        extra={
-          <div className="mt-5 inline-flex rounded-full border p-1" style={{ borderColor: 'rgba(0,0,0,0.12)' }}>
-            {(['cm', 'in'] as const).map((u) => (
-              <button
-                key={u}
-                type="button"
-                onClick={() => setUnidad(u)}
-                className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2 transition-colors"
-                style={unidad === u ? { backgroundColor: '#141414', color: '#fff' } : { color: '#141414' }}
-              >
-                {u === 'cm' ? 'Centímetros' : 'Pulgadas'}
-              </button>
-            ))}
-          </div>
-        }
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14 grid lg:grid-cols-[220px_1fr] gap-10">
-        <nav className="hidden lg:block sticky top-32 self-start" aria-label="Prendas">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14 flex justify-end">
+        <div className="inline-flex rounded-full border p-1" style={{ borderColor: 'rgba(0,0,0,0.12)' }}>
+          {(['cm', 'in'] as const).map((u) => (
+            <button
+              key={u}
+              type="button"
+              onClick={() => setUnidad(u)}
+              className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2 transition-colors"
+              style={unidad === u ? { backgroundColor: '#141414', color: '#fff' } : { color: '#141414' }}
+            >
+              {u === 'cm' ? 'Centímetros' : 'Pulgadas'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-10 sm:pb-14 pt-4 grid lg:grid-cols-[220px_1fr] gap-10">
+        <nav className="hidden lg:block sticky top-56 self-start" aria-label="Prendas">
           <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3">Prendas</p>
           <ul className="space-y-2">
             {SIZE_GUIDES.map((g) => (

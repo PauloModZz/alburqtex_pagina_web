@@ -39,40 +39,38 @@ export default function BlogIndexPage() {
         eyebrow="Aprende"
         title="Blog"
         description="Guías directas, sin relleno, sobre bordado, archivos, precios, cuidados y uniformes para empresas."
-        extra={
-          <div className="mt-5 flex flex-wrap gap-2">
+      />
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+        <div className="mb-10 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setCategoria(null)}
+            className="text-xs font-semibold rounded-full px-3.5 py-2 border transition-colors"
+            style={
+              categoria === null
+                ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
+                : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
+            }
+          >
+            Todas
+          </button>
+          {(Object.keys(CATEGORIA_LABEL) as Categoria[]).map((cat) => (
             <button
+              key={cat}
               type="button"
-              onClick={() => setCategoria(null)}
+              onClick={() => setCategoria(cat)}
               className="text-xs font-semibold rounded-full px-3.5 py-2 border transition-colors"
               style={
-                categoria === null
+                categoria === cat
                   ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
                   : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
               }
             >
-              Todas
+              {CATEGORIA_LABEL[cat]}
             </button>
-            {(Object.keys(CATEGORIA_LABEL) as Categoria[]).map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategoria(cat)}
-                className="text-xs font-semibold rounded-full px-3.5 py-2 border transition-colors"
-                style={
-                  categoria === cat
-                    ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
-                    : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
-                }
-              >
-                {CATEGORIA_LABEL[cat]}
-              </button>
-            ))}
-          </div>
-        }
-      />
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+          ))}
+        </div>
         {!categoria && (
           <Reveal>
           <Link

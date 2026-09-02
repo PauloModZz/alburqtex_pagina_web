@@ -73,22 +73,20 @@ export default function FaqPage() {
         eyebrow="Ayuda"
         title="Preguntas frecuentes"
         description="Todo lo que suelen preguntarnos antes de pedir un bordado — si no encuentras tu respuesta aquí, te contestamos directo por WhatsApp."
-        extra={
-          <div className="relative mt-5 max-w-md">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-black/35" strokeWidth={2} />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Busca por palabra clave (ej. archivo, mínimo, plazo...)"
-              aria-label="Buscar en preguntas frecuentes"
-              className="w-full text-sm rounded-full border border-black/10 bg-white pl-10 pr-4 py-3 outline-none focus:border-black/30 transition-colors"
-            />
-          </div>
-        }
       />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+        <div className="relative mb-10 max-w-md">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-black/35" strokeWidth={2} />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Busca por palabra clave (ej. archivo, mínimo, plazo...)"
+            aria-label="Buscar en preguntas frecuentes"
+            className="w-full text-sm rounded-full border border-black/10 bg-white pl-10 pr-4 py-3 outline-none focus:border-black/30 transition-colors"
+          />
+        </div>
         {filteredCategories.length === 0 ? (
           <p className="text-sm text-black/45 text-center py-16">
             No encontramos preguntas con "{search}". Prueba con otra palabra o escríbenos directo.
