@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import PageHeader from '../layout/PageHeader';
 import PageFooter from '../layout/PageFooter';
 import WhatsAppFloatButton from '../layout/WhatsAppFloatButton';
@@ -66,6 +66,8 @@ export default function GalleryPage() {
   const prendaFilter = (params.get('prenda') as Prenda) || null;
   const tecnicaFilter = (params.get('tecnica') as Tecnica) || null;
   const sectorFilter = (params.get('sector') as Sector) || null;
+  const activeFilterCount = [prendaFilter, tecnicaFilter, sectorFilter].filter(Boolean).length;
+  const [filtersOpen, setFiltersOpen] = useState(activeFilterCount > 0);
 
   useSeo({
     title: 'Galería de bordados',
@@ -118,34 +120,65 @@ export default function GalleryPage() {
         eyebrow="Portafolio"
         title="Galería de bordados"
         description="Muestras visuales de acabados, puntadas y materiales. Filtra por prenda, técnica o sector para imaginar cómo puede verse tu proyecto."
-        extra={
-          <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-6">
-            <FilterGroup
-              label="Prenda"
-              options={Object.keys(PRENDA_LABEL) as Prenda[]}
-              labels={PRENDA_LABEL}
-              active={prendaFilter}
-              onToggle={(v) => toggleParam('prenda', v)}
-            />
-            <FilterGroup
-              label="Técnica"
-              options={Object.keys(TECNICA_LABEL) as Tecnica[]}
-              labels={TECNICA_LABEL}
-              active={tecnicaFilter}
-              onToggle={(v) => toggleParam('tecnica', v)}
-            />
-            <FilterGroup
-              label="Sector"
-              options={Object.keys(SECTOR_LABEL) as Sector[]}
-              labels={SECTOR_LABEL}
-              active={sectorFilter}
-              onToggle={(v) => toggleParam('sector', v)}
-            />
-          </div>
-        }
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+        <div className="mb-8">
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((v) => !v)}
+            aria-expanded={filtersOpen}
+            className="inline-flex items-center gap-2 rounded-full pl-4 pr-3.5 py-2.5 text-xs font-semibold uppercase tracking-widest border transition-colors"
+            style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414', backgroundColor: filtersOpen ? 'rgba(0,0,0,0.04)' : 'transparent' }}
+          >
+            <SlidersHorizontal size={14} strokeWidth={2.25} />
+            Filtros
+            {activeFilterCount > 0 && (
+              <span
+                className="rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold"
+                style={{ backgroundColor: GOLD, color: '#fff' }}
+              >
+                {activeFilterCount}
+              </span>
+            )}
+            <ChevronDown
+              size={14}
+              strokeWidth={2.5}
+              className="transition-transform duration-200"
+              style={{ transform: filtersOpen ? 'rotate(180deg)' : 'none' }}
+            />
+          </button>
+
+          {filtersOpen && (
+            <div
+              className="mt-4 flex flex-col sm:flex-row flex-wrap gap-6 rounded-2xl border p-5"
+              style={{ borderColor: 'rgba(0,0,0,0.07)', backgroundColor: 'rgba(255,255,255,0.6)' }}
+            >
+              <FilterGroup
+                label="Prenda"
+                options={Object.keys(PRENDA_LABEL) as Prenda[]}
+                labels={PRENDA_LABEL}
+                active={prendaFilter}
+                onToggle={(v) => toggleParam('prenda', v)}
+              />
+              <FilterGroup
+                label="Técnica"
+                options={Object.keys(TECNICA_LABEL) as Tecnica[]}
+                labels={TECNICA_LABEL}
+                active={tecnicaFilter}
+                onToggle={(v) => toggleParam('tecnica', v)}
+              />
+              <FilterGroup
+                label="Sector"
+                options={Object.keys(SECTOR_LABEL) as Sector[]}
+                labels={SECTOR_LABEL}
+                active={sectorFilter}
+                onToggle={(v) => toggleParam('sector', v)}
+              />
+            </div>
+          )}
+        </div>
+
         {filtered.length === 0 ? (
           <p className="text-sm text-black/40 text-center py-20">
             No hay trabajos con esa combinación de filtros todavía — prueba quitando alguno.
