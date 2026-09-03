@@ -1,4 +1,4 @@
-import { Award, MapPin, Package, Palette, Scissors, Sparkles, Stamp } from 'lucide-react';
+import { Award, MapPin, Package, Palette, Scissors, Shirt, Sparkles, Stamp } from 'lucide-react';
 import Reveal from './layout/Reveal';
 
 const GOLD = '#C9973F';
@@ -6,11 +6,16 @@ const GOLD = '#C9973F';
 const STATS = [
   { icon: Award, value: '20+', label: 'Años de experiencia en el mercado' },
   { icon: Package, value: '100+', label: 'Productos personalizables' },
-  { icon: Sparkles, value: '4', label: 'Técnicas: bordado, estampado, sublimado y serigrafía' },
+  { icon: Sparkles, value: '5', label: 'Técnicas: confección, bordado, estampado, sublimado y serigrafía' },
   { icon: MapPin, value: '100%', label: 'Hecho a pedido en Ecuador' },
 ];
 
 const TECHNIQUES = [
+  {
+    icon: Shirt,
+    title: 'Confección',
+    desc: 'Fabricamos la prenda desde la tela: cortamos y cosemos uniformes, polos y ropa a medida, no solo decoramos prendas ya hechas.',
+  },
   {
     icon: Scissors,
     title: 'Bordado',
@@ -60,10 +65,11 @@ export default function AboutSection() {
           Sobre Alburqtex
         </h2>
         <p className="text-sm sm:text-base text-black/60 max-w-2xl leading-relaxed mb-14">
-          Con más de 20 años en el mercado, somos un taller ecuatoriano de personalización textil.
-          Trabajamos con negocios, empresas, instituciones y equipos que necesitan uniformes, ropa
-          corporativa y artículos con su propio logo, nombre o escudo — con bordado, estampado
-          grande, sublimado 100% o serigrafía, en los colores y cantidades que necesites.
+          Con más de 20 años en el mercado, somos un taller ecuatoriano de confección y
+          personalización textil. Fabricamos uniformes, polos y prendas a medida desde la tela, y
+          también trabajamos con negocios, empresas, instituciones y equipos que necesitan sus
+          artículos con su propio logo, nombre o escudo — con bordado, estampado grande, sublimado
+          100% o serigrafía, en los colores y cantidades que necesites.
         </p>
 
         {/* Stats */}
@@ -82,7 +88,7 @@ export default function AboutSection() {
         </div>
 
         {/* Techniques */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
           {TECHNIQUES.map(({ icon: Icon, title, desc }, i) => (
             <Reveal key={title} delay={i * 90}>
               <div

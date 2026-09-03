@@ -152,7 +152,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
           Catálogo Alburqtex
         </h1>
         <p className="text-sm text-black/55 mt-2 mb-5 max-w-xl">
-          Bordado personalizado con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.
+          Confeccionamos y personalizamos con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.
         </p>
 
         {/* Búsqueda: fila propia, no compite con las categorías */}

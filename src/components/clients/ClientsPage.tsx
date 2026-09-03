@@ -19,7 +19,7 @@ export default function ClientsPage() {
   useSeo({
     title: 'Clientes y testimonios',
     description:
-      'Empresas, instituciones y personas que ya confiaron en Alburqtex para bordar sus uniformes, prendas corporativas y piezas personalizadas.',
+      'Empresas, instituciones y personas que ya confiaron en Alburqtex para confeccionar y bordar sus uniformes, prendas corporativas y piezas personalizadas.',
     path: '/clientes',
   });
 

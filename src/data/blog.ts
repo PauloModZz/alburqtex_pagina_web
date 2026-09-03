@@ -521,7 +521,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitulo: 'Cómo planificar un pedido de uniformes bordados para empresa',
     metaDescripcion:
       'Guía para empresas: cómo levantar el cuadro de tallas del personal, margen de reposición, plazos realistas y consistencia de color entre lotes.',
-    relacionados: ['de-que-depende-el-precio', 'que-es-el-ponchado'],
+    relacionados: ['confeccion-de-uniformes-desde-cero', 'de-que-depende-el-precio', 'que-es-el-ponchado'],
     cuerpo: [
       {
         type: 'p',
@@ -574,6 +574,109 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: 'p',
         text: 'La buena noticia es que, una vez que hiciste tu primer pedido con nosotros, los siguientes son mucho más simples: el logo ya está digitalizado, ya sabemos tu talla de tejido y color preferido, y el proceso se reduce básicamente a confirmar cantidades y tallas nuevas. Planificar bien el primer pedido es lo que hace que todos los siguientes sean casi automáticos.',
+      },
+    ],
+  },
+  {
+    slug: 'confeccion-de-uniformes-desde-cero',
+    titulo: 'Confección de uniformes desde cero: así funciona el proceso',
+    categoria: 'tecnica',
+    extracto:
+      'No solo bordamos y estampamos — también confeccionamos la prenda desde la tela. Así es el proceso completo, del patronaje a la prenda terminada, y cuándo tiene sentido pedirlo así en vez de personalizar algo ya hecho.',
+    tiempoLectura: 7,
+    fecha: '2026-09-01',
+    autor: 'Equipo Alburqtex',
+    metaTitulo: 'Confección de uniformes desde cero: cómo es el proceso',
+    metaDescripcion:
+      'Cómo confeccionamos uniformes y prendas a medida desde la tela: patronaje, corte, costura y personalización — y cuándo conviene frente a comprar una prenda ya hecha.',
+    relacionados: ['confeccion-vs-prenda-personalizada', 'uniformes-para-empresas', 'de-que-depende-el-precio'],
+    cuerpo: [
+      {
+        type: 'p',
+        text: 'La mayoría de talleres que hacen bordado o estampado trabajan siempre sobre una prenda que ya existe — la compran hecha y la decoran. Nosotros también hacemos eso, pero además confeccionamos: cortamos y cosemos la prenda desde la tela, a la medida y especificación exacta que necesites, antes de bordarla, estamparla o sublimarla.',
+      },
+      { type: 'h2', text: 'Por qué confeccionar en vez de comprar una prenda ya hecha', id: 'por-que-confeccionar' },
+      {
+        type: 'p',
+        text: 'Cuando personalizas una prenda comprada, estás limitado a los cortes, telas y tallas que ese fabricante decidió ofrecer. Confeccionar desde cero te da control real sobre cada detalle: el tipo exacto de tela (peso, color, elasticidad), el corte (ajustado, holgado, con o sin bolsillos, cierres, refuerzos), y las tallas exactas de tu equipo, no las tallas genéricas de un catálogo. Es la diferencia entre "lo más parecido que encontramos" y "exactamente lo que pediste".',
+      },
+      { type: 'h2', text: 'El proceso, paso a paso', id: 'el-proceso' },
+      {
+        type: 'ul',
+        items: [
+          'Diseño y patronaje: definimos el corte de la prenda y armamos el patrón (el molde) según tus medidas o el cuadro de tallas de tu equipo.',
+          'Selección de tela: elegimos el tejido según el uso real de la prenda — no es la misma tela para un uniforme de cocina que para uno de oficina o de trabajo en exteriores.',
+          'Corte: se corta la tela siguiendo el patrón, en el volumen total del pedido.',
+          'Costura: se arma la prenda pieza por pieza — esta es la parte que un catálogo de prendas ya hechas no te puede ofrecer a medida.',
+          'Personalización: una vez armada la prenda, recién ahí se borda, estampa o sublima el logo, nombre o escudo — igual que con cualquier prenda comprada.',
+          'Control de calidad: revisamos costuras, tallas y el acabado del bordado o estampado antes de entregar.',
+        ],
+      },
+      {
+        type: 'callout',
+        kind: 'dato',
+        text: 'La personalización (bordado, estampado, sublimado) es el mismo proceso ya sea que confecciones la prenda con nosotros o traigas una comprada — la diferencia está en todo lo que pasa antes de llegar a esa etapa.',
+      },
+      { type: 'h2', text: 'Cuándo tiene sentido confeccionar desde cero', id: 'cuando-conviene' },
+      {
+        type: 'p',
+        text: 'No siempre hace falta — para un pedido chico o un diseño simple sobre una prenda estándar (una gorra, un polo básico), personalizar algo ya hecho suele ser más rápido y económico, y por eso también tenemos catálogo propio de prendas en blanco. Confeccionar desde cero tiene más sentido cuando necesitas un corte o tela muy específica que no existe en catálogo, un volumen de uniformes donde vale la pena invertir en un patrón propio, o control total sobre cómo se ve y se siente la prenda final — típico en instituciones, equipos deportivos o marcas que quieren un uniforme realmente propio, no genérico.',
+      },
+      {
+        type: 'p',
+        text: 'Si no estás seguro de cuál te conviene, escríbenos contando qué necesitas — te decimos con honestidad si tu caso pide confección desde cero o si personalizar una prenda de catálogo te da el mismo resultado por menos.',
+      },
+    ],
+  },
+  {
+    slug: 'confeccion-vs-prenda-personalizada',
+    titulo: '¿Confeccionar tu uniforme desde cero o personalizar uno ya hecho? Cómo elegir',
+    categoria: 'antes-de-pedir',
+    extracto:
+      'Las dos opciones dan un uniforme con tu logo — pero no cuestan lo mismo, ni tardan lo mismo, ni te dan el mismo control. Comparamos costo, plazo, exclusividad y cantidad mínima para que decidas con información real.',
+    tiempoLectura: 6,
+    fecha: '2026-09-02',
+    autor: 'Equipo Alburqtex',
+    metaTitulo: 'Confeccionar desde cero vs. personalizar una prenda ya hecha',
+    metaDescripcion:
+      'Comparación honesta entre confeccionar un uniforme desde cero y personalizar una prenda de catálogo: costo, plazos, exclusividad de diseño y cantidad mínima.',
+    relacionados: ['confeccion-de-uniformes-desde-cero', 'uniformes-para-empresas', 'bordado-vs-estampado'],
+    cuerpo: [
+      {
+        type: 'p',
+        text: 'Confeccionamos prendas desde la tela y también personalizamos prendas ya hechas de nuestro catálogo — ambas terminan en un uniforme con tu logo, pero el camino hasta ahí es distinto en costo, tiempo y qué tan "propio" es el resultado. Esto es lo que cambia entre una opción y otra.',
+      },
+      { type: 'h2', text: 'Costo', id: 'costo' },
+      {
+        type: 'p',
+        text: 'Personalizar una prenda de catálogo suele ser más económico por unidad en pedidos chicos o medianos: la prenda ya existe, así que solo pagas la tela+confección estándar más la personalización. Confeccionar desde cero suma el costo de patronaje (se paga una vez, no por prenda) y de trabajar con un corte o tela específica en vez de un proceso ya estandarizado — en volumen alto esa diferencia se diluye, pero en pedidos chicos sí se nota más.',
+      },
+      { type: 'h2', text: 'Plazo de entrega', id: 'plazo' },
+      {
+        type: 'p',
+        text: 'Personalizar una prenda ya hecha es más rápido: la prenda está lista, solo falta bordar o estampar. Confeccionar desde cero suma el tiempo de patronaje, corte y costura antes de llegar a esa misma etapa — no es un proceso lento, pero sí toma más días que partir de una prenda que ya existe.',
+      },
+      { type: 'h2', text: 'Exclusividad y control del diseño', id: 'exclusividad' },
+      {
+        type: 'p',
+        text: 'Aquí gana la confección desde cero, sin comparación: eliges la tela exacta, el corte exacto, y las tallas se hacen a la medida real de tu equipo en vez de ajustarse a un tallaje genérico. Si tu marca o institución necesita un uniforme que nadie más tenga — ni siquiera parecido — confeccionar es la única forma de garantizarlo.',
+      },
+      { type: 'h2', text: 'Cantidad mínima', id: 'cantidad-minima' },
+      {
+        type: 'p',
+        text: 'Personalizar prenda de catálogo funciona bien desde una sola pieza. Confeccionar desde cero, al sumar el patronaje, tiene más sentido económico a partir de un volumen donde ese costo fijo se reparte entre varias prendas — para un pedido de una o pocas piezas, casi siempre recomendamos personalizar sobre catálogo o sobre una prenda que ya tengas.',
+      },
+      { type: 'h2', text: 'Entonces, ¿cuál elijo?', id: 'cual-elegir' },
+      {
+        type: 'ul',
+        items: [
+          'Elige personalizar prenda de catálogo si: el pedido es chico, tu fecha es ajustada, o un corte/tela estándar te sirve perfecto.',
+          'Elige confeccionar desde cero si: necesitas un corte o tela muy específica, el volumen justifica el patronaje propio, o la exclusividad del diseño es importante para tu marca o institución.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Cuéntanos qué necesitas y para cuándo, y te decimos sin vueltas cuál de las dos te conviene más — a veces la respuesta honesta es la opción que nos deja menos margen, y preferimos eso a venderte algo que no es lo que tu caso pide.',
       },
     ],
   },

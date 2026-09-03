@@ -273,7 +273,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
             className="hidden sm:block text-xs sm:text-sm text-white mb-4 sm:mb-5"
             style={{ opacity: 0.85, lineHeight: 1.6 }}
           >
-            Bordados, estampados y sublimados de alto nivel. Desde Guayaquil para ti, para instituciones y empresas. Bordamos calidad. Estampamos confianza.
+            Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti, para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.
           </p>
           <div className="flex gap-3">
             <button

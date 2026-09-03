@@ -50,8 +50,8 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               Alburqtex
             </span>
             <p className="text-sm text-white/50 mt-3 leading-relaxed max-w-xs">
-              Bordados, estampados y sublimados de alto nivel. Desde Guayaquil para ti, para
-              instituciones y empresas. Bordamos calidad. Estampamos confianza.
+              Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti,
+              para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.
             </p>
           </div>
 

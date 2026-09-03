@@ -97,7 +97,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'venden-la-prenda',
         question: '¿Venden ustedes la prenda o solo bordan?',
         answer:
-          'Las dos cosas. Tenemos catálogo propio de prendas en blanco (polos, camisetas, gorras, chompas, mandiles, bolsos y más) listas para personalizar con bordado, estampado o sublimado — puedes ver el catálogo completo en la web y armar tu pedido ahí mismo. Y también podemos bordar sobre prendas que ya tienes, cuando aplica (ver la pregunta anterior).',
+          'Las dos cosas, y además confeccionamos. No solo decoramos: fabricamos uniformes, polos y prendas a medida desde la tela, cortando y cosiendo nosotros mismos. También tenemos catálogo propio de prendas en blanco (polos, camisetas, gorras, chompas, mandiles, bolsos y más) listas para personalizar con bordado, estampado o sublimado — puedes ver el catálogo completo en la web y armar tu pedido ahí mismo. Y también podemos bordar sobre prendas que ya tienes, cuando aplica (ver la pregunta anterior).',
       },
     ],
   },
