@@ -15,11 +15,6 @@ export type ContentBlock =
   | { type: 'table'; headers: string[]; rows: string[][] }
   | { type: 'link'; label: string; description: string; href: string };
 
-export interface InternalLink {
-  texto: string;
-  href: string;
-}
-
 export interface BlogPost {
   slug: string;
   titulo: string;

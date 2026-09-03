@@ -31,16 +31,10 @@ export const COUNTRIES: CountryOption[] = getCountries()
   .sort((a, b) => a.name.localeCompare(b.name, 'es'));
 
 /**
- * Valida un número nacional (sin código de país) contra el plan de
- * numeración real de ese país — no solo cuenta dígitos, revisa que la
- * longitud y forma correspondan a un número real de ese país.
+ * Convierte un número nacional (sin código de país) a formato internacional
+ * E.164 (ej. "+593991234567"), o null si no es válido. No solo cuenta
+ * dígitos: valida contra el plan de numeración real de ese país.
  */
-export function isValidPhoneForCountry(national: string, country: CountryCode): boolean {
-  const parsed = parsePhoneNumberFromString(national, country);
-  return Boolean(parsed?.isValid());
-}
-
-/** Convierte a formato internacional E.164 (ej. "+593991234567"), o null si no es válido. */
 export function toE164(national: string, country: CountryCode): string | null {
   const parsed = parsePhoneNumberFromString(national, country);
   return parsed?.isValid() ? parsed.number : null;

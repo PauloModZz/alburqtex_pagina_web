@@ -1,6 +1,6 @@
-import poloBordado from '../assets/products/hero-v2/bordado.png';
-import camisetaEstampada from '../assets/products/hero-v2/estampado-street.png';
-import camisetaSublimada from '../assets/products/hero-v2/sublimado.png';
+import poloBordado from '../assets/products/hero-v2/bordado.webp';
+import camisetaEstampada from '../assets/products/hero-v2/estampado-street.webp';
+import camisetaSublimada from '../assets/products/hero-v2/sublimado.webp';
 
 // Enlace de contacto tomado de la hoja CONFIG del inventario (INVENTARIO.xlsx).
 export const WHATSAPP_LINK = 'https://wa.me/message/DKEOUHOXAO5QI1';

@@ -6,14 +6,18 @@ import ClientsSection from './components/ClientsSection';
 import CommentsSection from './components/CommentsSection';
 import LocationSection from './components/LocationSection';
 import Footer from './components/Footer';
-import CatalogPage from './components/CatalogPage';
-import LegalPage from './components/LegalPage';
 import CookieConsent from './components/CookieConsent';
-import AuthPage from './components/auth/AuthPage';
-import AccountPage from './components/account/AccountPage';
-import CartPage from './components/order/CartPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+
+// Las vistas internas de AppShell (catálogo, legal, acceso, cuenta, pedido)
+// también se cargan bajo demanda: quien solo entra al inicio no descarga el
+// catálogo completo ni los formularios de registro que no va a abrir.
+const CatalogPage = lazy(() => import('./components/CatalogPage'));
+const LegalPage = lazy(() => import('./components/LegalPage'));
+const AuthPage = lazy(() => import('./components/auth/AuthPage'));
+const AccountPage = lazy(() => import('./components/account/AccountPage'));
+const CartPage = lazy(() => import('./components/order/CartPage'));
 
 // Las 6 páginas nuevas se cargan bajo demanda (code-splitting) — evita que
 // alguien que solo entra al inicio tenga que descargar los 8 artículos del
@@ -116,7 +120,9 @@ function AppShell() {
 
   return (
     <>
-      {page}
+      {/* Suspense propio: al abrir el catálogo o el acceso solo se reemplaza la
+          página, no el aviso de cookies que ya estaba en pantalla. */}
+      <Suspense fallback={<RouteFallback />}>{page}</Suspense>
       <CookieConsent onOpenLegal={openLegal} />
     </>
   );

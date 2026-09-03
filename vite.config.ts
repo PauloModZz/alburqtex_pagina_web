@@ -8,4 +8,19 @@ export default defineConfig({
   server: {
     open: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Firebase y React casi nunca cambian; el código del sitio sí. Al
+        // separarlos, un deploy nuevo solo invalida el chunk de la app y el
+        // visitante recurrente se ahorra volver a bajar ~700KB de librerías.
+        advancedChunks: {
+          groups: [
+            { name: 'firebase', test: /node_modules[\\/]@?firebase/ },
+            { name: 'react', test: /node_modules[\\/](react|react-dom|react-router)/ },
+          ],
+        },
+      },
+    },
+  },
 })
