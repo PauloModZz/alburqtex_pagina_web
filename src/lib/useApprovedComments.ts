@@ -8,6 +8,7 @@ export interface ApprovedComment {
   displayName: string;
   rating: number;
   text: string;
+  fotoUrl?: string;
   createdAt: Timestamp | null;
 }
 

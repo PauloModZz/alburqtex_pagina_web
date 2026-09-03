@@ -29,6 +29,7 @@ const SizeGuidePage = lazy(() => import('./components/sizes/SizeGuidePage'));
 const ClientsPage = lazy(() => import('./components/clients/ClientsPage'));
 const BlogIndexPage = lazy(() => import('./components/blog/BlogIndexPage'));
 const BlogPostPage = lazy(() => import('./components/blog/BlogPostPage'));
+const AdminCommentsPage = lazy(() => import('./components/admin/AdminCommentsPage'));
 
 function RouteFallback() {
   return (
@@ -143,6 +144,7 @@ function App() {
               <Route path="/clientes" element={<ClientsPage />} />
               <Route path="/blog" element={<BlogIndexPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/admin/comentarios" element={<AdminCommentsPage />} />
               {/* Todo lo demás (inicio, catálogo, carrito, cuenta, legal) sigue
                   funcionando exactamente igual que antes, como una sola vista
                   interna de AppShell — no se tocó su comportamiento. */}

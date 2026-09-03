@@ -15,6 +15,14 @@ service cloud.firestore {
       return phone is string && phone.matches('^\\+[1-9][0-9]{6,14}$');
     }
 
+    // Único correo que puede moderar comentarios (aprobar/rechazar) desde
+    // /admin/comentarios en la propia web, en vez de por la consola de
+    // Firebase. Coincide con el `email` verificado por Firebase Auth, no
+    // con un campo cualquiera — no se puede falsificar.
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'paulo.abad10200@gmail.com';
+    }
+
     match /pedidos/{pedidoId} {
       // Cada cliente solo puede leer sus propios pedidos.
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
@@ -68,17 +76,20 @@ service cloud.firestore {
     }
 
     // Comentarios/reseñas públicas en la web. Todo comentario nuevo entra
-    // en estado "pendiente" — nadie puede publicarse solo. Cambiar a
-    // "aprobado" (para que sea visible) solo lo hace el negocio desde la
-    // consola de Firebase, que no pasa por estas reglas. Así ningún
-    // comentario ofensivo o spam llega a mostrarse públicamente, sin
-    // importar por dónde se haya intentado escribirlo.
+    // en estado "pendiente" — nadie puede publicarse solo. Solo isAdmin()
+    // puede aprobarlo (o rechazarlo, borrándolo) desde /admin/comentarios,
+    // así ningún comentario ofensivo o spam llega a mostrarse públicamente,
+    // sin importar por dónde se haya intentado escribirlo.
     match /comentarios/{comentarioId} {
-      // Cualquier visitante (con o sin sesión) puede ver los ya aprobados.
-      allow read: if resource.data.status == 'aprobado';
+      // Cualquier visitante puede ver los ya aprobados; el admin además ve
+      // los pendientes, para poder revisarlos en /admin/comentarios.
+      allow read: if resource.data.status == 'aprobado' || isAdmin();
 
       // Solo un usuario autenticado, a su propio nombre, siempre en estado
-      // "pendiente", con calificación de 1 a 5 y sin enlaces (anti-spam).
+      // "pendiente", con calificación de 1 a 5, sin enlaces (anti-spam), y
+      // con una foto opcional guardada como data URI (no hay Storage detrás
+      // de este proyecto) — como texto, con un tope de tamaño generoso pero
+      // bien por debajo del límite de 1MB por documento de Firestore.
       allow create: if request.auth != null
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.status == 'pendiente'
@@ -88,13 +99,20 @@ service cloud.firestore {
         && request.resource.data.text is string
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 500
-        && !request.resource.data.text.matches('(?i).*(https?://|www\\.).*');
+        && !request.resource.data.text.matches('(?i).*(https?://|www\\.).*')
+        && (!('fotoUrl' in request.resource.data)
+            || (request.resource.data.fotoUrl.matches('^data:image/jpeg;base64,.*')
+                && request.resource.data.fotoUrl.size() < 700000));
 
-      // El autor puede borrar su propio comentario. Nadie puede editar uno
-      // ya escrito (evita aprobar algo y cambiarlo por otra cosa después) —
-      // eso incluye el propio campo "status", que solo cambia por consola.
-      allow update: if false;
-      allow delete: if request.auth != null && request.auth.uid == resource.data.uid;
+      // Solo el admin puede aprobar, y solo cambiando el campo "status" (no
+      // puede reescribir el texto/calificación de alguien más).
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'aprobado';
+
+      // El autor puede borrar su propio comentario; el admin puede borrar
+      // cualquiera (esa es la acción de "rechazar").
+      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.uid);
     }
 
     // Contador de intentos fallidos de inicio de sesión, para el captcha al

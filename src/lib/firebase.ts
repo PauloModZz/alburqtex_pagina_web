@@ -35,9 +35,9 @@ const app =
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// App Check protege las llamadas a Auth/Firestore/Storage contra bots y
-// abuso automatizado. Es opcional mientras no tengas una site key de
-// reCAPTCHA v3 (ver SETUP.md) — sin ella, el sitio funciona igual.
+// App Check protege las llamadas a Auth/Firestore contra bots y abuso
+// automatizado. Es opcional mientras no tengas una site key de reCAPTCHA v3
+// (ver SETUP.md) — sin ella, el sitio funciona igual.
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
 if (isFirebaseConfigured && recaptchaSiteKey) {
   initializeAppCheck(app, {
