@@ -95,109 +95,110 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
       className="min-h-screen w-full"
       style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}
     >
+      {/* Header pegajoso reducido a una sola fila (volver/cuenta/carrito/menú) —
+          título, buscador y categorías viven en <main> para no tapar el catálogo
+          al hacer scroll, mismo patrón que ya usan galería y preguntas frecuentes. */}
       <header
         className="sticky top-0 z-40 border-b"
         style={{ backgroundColor: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(8px)', borderColor: 'rgba(0,0,0,0.08)' }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-5 pb-4">
-          <div className="flex items-center justify-between mb-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors"
+          >
+            <ArrowLeft size={16} strokeWidth={2.25} />
+            Volver
+          </button>
+          <div className="flex items-center gap-4">
+            <span className="hidden sm:inline text-xs font-semibold uppercase tracking-widest text-black/40">
+              {filtered.length} de {CATALOG.length} productos
+            </span>
             <button
               type="button"
-              onClick={onBack}
-              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors"
+              onClick={onOpenAccount}
+              aria-label="Mi cuenta"
+              className="text-black/60 hover:text-black transition-colors"
             >
-              <ArrowLeft size={16} strokeWidth={2.25} />
-              Volver
+              <User size={20} strokeWidth={2} />
             </button>
-            <div className="flex items-center gap-4">
-              <span className="hidden sm:inline text-xs font-semibold uppercase tracking-widest text-black/40">
-                {filtered.length} de {CATALOG.length} productos
-              </span>
-              <button
-                type="button"
-                onClick={onOpenAccount}
-                aria-label="Mi cuenta"
-                className="text-black/60 hover:text-black transition-colors"
-              >
-                <User size={20} strokeWidth={2} />
-              </button>
-              <button
-                type="button"
-                onClick={onOpenCart}
-                aria-label="Carrito"
-                className="relative text-black/60 hover:text-black transition-colors"
-              >
-                <ShoppingBag size={20} strokeWidth={2} />
-                {cartCount > 0 && (
-                  <span
-                    className="absolute -top-1.5 -right-1.5 text-[10px] font-bold text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    style={{ backgroundColor: GOLD }}
-                  >
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <InlineNavMenu />
-            </div>
-          </div>
-
-          <h1
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 'clamp(32px, 6vw, 64px)',
-              lineHeight: 1,
-              letterSpacing: '-0.02em',
-              textTransform: 'uppercase',
-              color: '#141414',
-            }}
-          >
-            Catálogo Alburqtex
-          </h1>
-          <p className="text-sm text-black/55 mt-2 mb-5 max-w-xl">
-            Bordado personalizado con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.
-          </p>
-
-          {/* Búsqueda: fila propia, no compite con las categorías */}
-          <div className="relative max-w-sm mb-3">
-            <Search
-              size={16}
-              strokeWidth={2.25}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-black/35"
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar producto o material..."
-              className="w-full text-sm rounded-full border border-black/10 bg-white pl-9 pr-4 py-2.5 outline-none focus:border-black/30 transition-colors"
-            />
-          </div>
-
-          {/* Categorías: se envuelven en varias filas, todas visibles siempre (sin scroll oculto) */}
-          <div className="flex flex-wrap gap-2">
-            {['Todas', ...CATEGORIES].map((cat) => {
-              const isActive = category === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setCategory(cat)}
-                  className="text-xs font-semibold uppercase tracking-wide rounded-full px-3.5 py-2 sm:px-4 sm:py-2.5 transition-colors border"
-                  style={
-                    isActive
-                      ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
-                      : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
-                  }
+            <button
+              type="button"
+              onClick={onOpenCart}
+              aria-label="Carrito"
+              className="relative text-black/60 hover:text-black transition-colors"
+            >
+              <ShoppingBag size={20} strokeWidth={2} />
+              {cartCount > 0 && (
+                <span
+                  className="absolute -top-1.5 -right-1.5 text-[10px] font-bold text-white rounded-full w-4 h-4 flex items-center justify-center"
+                  style={{ backgroundColor: GOLD }}
                 >
-                  {cat}
-                </button>
-              );
-            })}
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <InlineNavMenu />
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        <h1
+          style={{
+            fontFamily: "'Anton', sans-serif",
+            fontSize: 'clamp(32px, 6vw, 64px)',
+            lineHeight: 1,
+            letterSpacing: '-0.02em',
+            textTransform: 'uppercase',
+            color: '#141414',
+          }}
+        >
+          Catálogo Alburqtex
+        </h1>
+        <p className="text-sm text-black/55 mt-2 mb-5 max-w-xl">
+          Bordado personalizado con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.
+        </p>
+
+        {/* Búsqueda: fila propia, no compite con las categorías */}
+        <div className="relative max-w-sm mb-3">
+          <Search
+            size={16}
+            strokeWidth={2.25}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-black/35"
+          />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar producto o material..."
+            className="w-full text-sm rounded-full border border-black/10 bg-white pl-9 pr-4 py-2.5 outline-none focus:border-black/30 transition-colors"
+          />
+        </div>
+
+        {/* Categorías: se envuelven en varias filas, todas visibles siempre (sin scroll oculto) */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {['Todas', ...CATEGORIES].map((cat) => {
+            const isActive = category === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategory(cat)}
+                className="text-xs font-semibold uppercase tracking-wide rounded-full px-3.5 py-2 sm:px-4 sm:py-2.5 transition-colors border"
+                style={
+                  isActive
+                    ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
+                    : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
+                }
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
         {filtered.length === 0 ? (
           <div className="text-center py-24 text-black/40 text-sm">
             No se encontraron productos con esos filtros.
