@@ -97,24 +97,15 @@ export default function ClientsPage() {
         {/* Bloque de confianza */}
         <section className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6">
           {[
-            { label: 'Años de experiencia', pending: 'años de experiencia' },
-            { label: 'Prendas bordadas al año', pending: 'prendas bordadas por año' },
-            { label: 'Clientes recurrentes', pending: '% o número de clientes recurrentes' },
+            { label: 'Años de experiencia', value: '+20' },
+            { label: 'Prendas bordadas al año', value: '+9,000' },
+            { label: 'Clientes recurrentes', value: '100%' },
             { label: 'Sectores atendidos', value: String(bySector.length) },
           ].map((stat) => (
             <div key={stat.label}>
-              {stat.pending ? (
-                <>
-                  <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(22px, 3vw, 32px)', color: 'rgba(20,20,20,0.25)', lineHeight: 1 }}>
-                    —
-                  </div>
-                  <p className="text-[10px] text-black/35 mt-1 italic leading-snug">{`{{DATO_PENDIENTE: ${stat.pending}}}`}</p>
-                </>
-              ) : (
-                <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(22px, 3vw, 32px)', color: '#141414', lineHeight: 1 }}>
-                  {stat.value}
-                </div>
-              )}
+              <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(22px, 3vw, 32px)', color: '#141414', lineHeight: 1 }}>
+                {stat.value}
+              </div>
               <p className="text-xs text-black/50 mt-2 leading-snug">{stat.label}</p>
             </div>
           ))}
@@ -145,10 +136,15 @@ export default function ClientsPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {comments.map((c, i) => (
                 <Reveal key={c.id} delay={(i % 6) * 70}>
-                  <div className="rounded-2xl p-5 bg-white border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-                    <StarRating value={c.rating} size={13} />
-                    <p className="text-sm text-black/70 leading-relaxed mt-3 mb-4">&ldquo;{c.text}&rdquo;</p>
-                    <p className="text-xs font-semibold text-black/40">— {c.displayName}</p>
+                  <div className="rounded-2xl overflow-hidden bg-white border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                    {c.fotoUrl && (
+                      <img src={c.fotoUrl} alt="" loading="lazy" className="w-full h-40 object-cover" />
+                    )}
+                    <div className="p-5">
+                      <StarRating value={c.rating} size={13} />
+                      <p className="text-sm text-black/70 leading-relaxed mt-3 mb-4">&ldquo;{c.text}&rdquo;</p>
+                      <p className="text-xs font-semibold text-black/40">— {c.displayName}</p>
+                    </div>
                   </div>
                 </Reveal>
               ))}
@@ -166,8 +162,35 @@ export default function ClientsPage() {
             Casos
           </span>
           <h2 className="text-xl font-bold text-black/90 mb-6">Casos de éxito</h2>
-          <div className="rounded-2xl border p-8 text-sm text-black/50 leading-relaxed" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-            {'{{DATO_PENDIENTE: 1–3 casos de éxito reales, con estructura "el reto → lo que hicimos → el resultado" y cifras si las tienes (cantidad de prendas, plazo cumplido). Ver PENDIENTES.md.}}'}
+          <div className="rounded-2xl border p-6 sm:p-8" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+            <p className="text-sm font-bold text-black/85 mb-5">Ser el proveedor de bordado de confianza para toda la producción de una marca</p>
+            <div className="grid sm:grid-cols-3 gap-6">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>El reto</p>
+                <p className="text-sm text-black/60 leading-relaxed">
+                  Marcas como D&apos;Casa y Pisadas, además de instituciones como la Armada del Ecuador, el Ejército
+                  Ecuatoriano y el Colegio Alemán Humboldt, necesitaban un solo proveedor de bordado confiable para
+                  toda su producción recurrente — no pedidos sueltos de vez en cuando, sino un socio que sostuviera
+                  el volumen mes a mes sin fallar.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>Qué hicimos</p>
+                <p className="text-sm text-black/60 leading-relaxed">
+                  Nos convertimos en su distribuidor y proveedor oficial de bordado, asumiendo toda la producción de
+                  forma continua en vez de trabajar pedido por pedido. Con D&apos;Casa, por ejemplo, eso significa
+                  bordar el 100% de sus prendas personalizadas.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>El resultado</p>
+                <p className="text-sm text-black/60 leading-relaxed">
+                  En meses de alta demanda llegamos a producir hasta <strong className="text-black/80">1,000 piezas individuales</strong> solo
+                  para D&apos;Casa — el mismo nivel de volumen que sostenemos con Pisadas y con las demás
+                  instituciones que ya confían en nosotros.
+                </p>
+              </div>
+            </div>
           </div>
           <Link
             to="/galeria"

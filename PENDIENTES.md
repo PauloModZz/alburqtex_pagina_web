@@ -27,17 +27,11 @@ no aparecen hasta que haya comentarios reales aprobados).
   diferencia a un taller bueno en la percepción de alguien que nunca te ha
   visto trabajar.
 
-- **Cifras de confianza y casos de éxito**
-  Archivo: `src/components/clients/ClientsPage.tsx` (bloque de estadísticas
-  y sección "Casos de éxito"). Años de experiencia, prendas bordadas al
-  año, % de clientes recurrentes, y 1–3 casos reales con estructura
-  "reto → qué hicimos → resultado". No se inventó ningún número.
-
 - **Testimonios reales**
-  No hace falta tocar ningún archivo — en cuanto apruebes comentarios desde
-  la consola de Firebase (colección `comentarios`, cambiar `status` de
-  `pendiente` a `aprobado`), aparecen solos tanto en el inicio como en
-  `/clientes`, con su calificación promedio.
+  No hace falta tocar ningún archivo — en cuanto apruebes un comentario
+  desde `/admin/comentarios` (o desde el link de Telegram), aparece solo
+  tanto en el inicio como en `/clientes`, con su calificación promedio y
+  su foto si el cliente subió una.
 
 ## 3. Cuando tengas tiempo — pulido, no bloquea nada
 
