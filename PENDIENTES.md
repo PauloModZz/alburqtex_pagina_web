@@ -9,17 +9,6 @@ no aparecen hasta que haya comentarios reales aprobados).
 
 ## 1. Urgente — afecta lo que un cliente real puede leer hoy
 
-- **Pedido mínimo (empresa y particular), tiempo de entrega típico**
-  Archivo: `src/data/faq.ts` (preguntas `pedido-minimo`, `cuanto-tarda`).
-  Ahora mismo el sitio explica que "se confirma en la cotización" (cierto,
-  ya está así en tus Términos y Condiciones), pero si tienes un número o
-  rango real, se puede poner directo y ahorra un paso a quien pregunta.
-
-- **¿Bordan prendas que trae el cliente? ¿Quién responde si se daña?**
-  Archivo: `src/data/faq.ts` (preguntas `bordan-prenda-propia`, `prenda-se-dana`).
-  Es una pregunta que seguro te van a hacer — vale la pena decidir la
-  política antes de que llegue el primer caso real.
-
 - **Medidas de tallas y ubicaciones de bordado**
   Archivos: `src/data/tallas.ts`, `src/data/tejidos.ts` (campo `medidaMaxima`
   en `UBICACIONES_BORDADO`).
@@ -37,9 +26,6 @@ no aparecen hasta que haya comentarios reales aprobados).
   puntada" (primer plano bien cerca de una puntada), es la que más
   diferencia a un taller bueno en la percepción de alguien que nunca te ha
   visto trabajar.
-
-- **Ponchado: ¿el cliente puede pedir su archivo digitalizado?**
-  Archivo: `src/data/faq.ts` (pregunta `archivo-digitalizado-es-mio`).
 
 - **Cifras de confianza y casos de éxito**
   Archivo: `src/components/clients/ClientsPage.tsx` (bloque de estadísticas

@@ -19,7 +19,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'pedido-minimo',
         question: '¿Cuál es el pedido mínimo?',
         answer:
-          'Depende de si el pedido es para empresa/institución o para una persona particular. Para pedidos corporativos (uniformes, dotación de personal, merchandising de marca) el mínimo es {{DATO_PENDIENTE: pedido mínimo B2B en unidades}}. Para pedidos particulares (una prenda personal, un regalo) el mínimo es {{DATO_PENDIENTE: pedido mínimo B2C en unidades}}. En ambos casos, mientras más piezas pidas con el mismo diseño, mejor te queda el precio por unidad — te lo confirmamos exacto por WhatsApp según tu caso.',
+          'No hay un mínimo de piezas — aceptamos pedidos desde 1 unidad, tanto para empresas como para particulares. Lo que sí cambia es el precio: en pedidos chicos se cobra el arte/diseño y el transporte, y si hace falta comprar materiales especiales para tu pedido (telas, gorras, etc.) ese costo también se suma. Mientras más piezas pidas con el mismo diseño, mejor te queda el precio por unidad — te lo confirmamos exacto por WhatsApp según tu caso.',
       },
       {
         id: 'una-sola-pieza',
@@ -61,7 +61,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'archivo-digitalizado-es-mio',
         question: '¿El archivo digitalizado queda a mi nombre? ¿Me lo pueden entregar?',
         answer:
-          'El archivo de bordado de tu logo queda guardado en nuestro sistema para tus próximos pedidos, así no se vuelve a cobrar la digitalización cada vez. {{DATO_PENDIENTE: política de entrega del archivo digitalizado (DST/EMB/PES) al cliente si lo solicita}}. Si te interesa tener tu propia copia, coméntanoslo al hacer tu pedido.',
+          'El archivo de bordado de tu logo queda guardado en nuestro sistema para tus próximos pedidos, así no se vuelve a cobrar la digitalización cada vez. No se lo entregamos por defecto — tenerlo tiene un costo aparte que se cotiza como servicio de digitalización, aunque normalmente sale bastante más económico si además mandas a bordar la prenda con nosotros que si solo quieres el archivo. Si te interesa tener tu propia copia, coméntanoslo al hacer tu pedido.',
       },
       {
         id: 'degradados-muchos-colores',
@@ -79,13 +79,13 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'bordan-prenda-propia',
         question: '¿Bordan prendas que yo llevo?',
         answer:
-          '{{DATO_PENDIENTE: política sobre bordar prendas que trae el propio cliente (sí / no / sí con condiciones)}}. En general, cuando un taller borda una prenda que no vendió él mismo, pide revisar antes el tipo de tela y su estado, porque no todos los tejidos ni todas las costuras aguantan bien el bastidor y la tensión del bordado. Escríbenos con fotos de la prenda y te confirmamos si tu caso aplica.',
+          'Sí, bordamos prendas que traigas tú mismo. En general, cuando un taller borda una prenda que no vendió él mismo, pide revisar antes el tipo de tela y su estado, porque no todos los tejidos ni todas las costuras aguantan bien el bastidor y la tensión del bordado. Escríbenos con fotos de la prenda y te confirmamos si tu caso aplica.',
       },
       {
         id: 'prenda-se-dana',
         question: '¿Qué pasa si la prenda que llevo se daña durante el bordado?',
         answer:
-          '{{DATO_PENDIENTE: política de responsabilidad sobre daños a prendas de terceros llevadas por el cliente}}. Por eso, si aceptamos bordar una prenda tuya, primero la revisamos y te avisamos si el tejido tiene algún riesgo (por ejemplo, telas muy elásticas, muy delgadas o ya desgastadas) antes de empezar, no después.',
+          'Si el daño es por un error nuestro, nos hacemos responsables. Si es por lo delicado del propio tejido (algo que puede pasar incluso trabajando bien, en telas finas o elásticas), te pedimos traer un pequeño margen extra — por ejemplo, si necesitas 100 piezas, trae un 5% más (5 piezas) para cubrir ese riesgo normal del proceso. Por eso, si aceptamos bordar una prenda tuya, primero la revisamos y te avisamos si el tejido tiene algún riesgo (por ejemplo, telas muy elásticas, muy delgadas o ya desgastadas) antes de empezar, no después.',
       },
       {
         id: 'tejidos-no-recomendados',
@@ -109,7 +109,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'cuanto-tarda',
         question: '¿Cuánto tarda un pedido?',
         answer:
-          'Al ser productos personalizados hechos a pedido, el tiempo varía según la cantidad de piezas, la técnica y la complejidad del diseño — no es el mismo plazo para una gorra que para 50 camisetas con un logo de varios colores. {{DATO_PENDIENTE: rango de tiempo de entrega típico}}. Te damos el tiempo estimado exacto de tu pedido en la cotización, antes de que confirmes.',
+          'Al ser productos personalizados hechos a pedido, el tiempo varía según la cantidad de piezas, la técnica y la complejidad del diseño — no es el mismo plazo para una gorra que para 50 camisetas con un logo de varios colores. Como referencia: pedidos pequeños suelen tomar unos 2 días hábiles, medianos alrededor de 4, y pedidos grandes hasta 7 días hábiles — pero siempre nos adaptamos si tienes una fecha límite específica. Te damos el tiempo estimado exacto de tu pedido en la cotización, antes de que confirmes.',
       },
       {
         id: 'entregas-urgentes',
