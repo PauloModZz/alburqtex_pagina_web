@@ -9,11 +9,6 @@ const GRAIN_DATA_URI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(GR
 const EASE = 'cubic-bezier(0.4,0,0.2,1)';
 const TRANSITION_MS = 650;
 
-// "BORDADO" (7 letras) es la palabra más corta y define el ancho de referencia;
-// "ESTAMPADO"/"SUBLIMADO" (9 letras) se escalan hacia abajo para no salirse de
-// la pantalla en vez de recortarse a la mitad.
-const GHOST_REFERENCE_LENGTH = 'BORDADO'.length;
-
 type Role = 'center' | 'left' | 'right' | 'back';
 
 function roleStyle(role: Role, isMobile: boolean): CSSProperties {
@@ -119,7 +114,6 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
   if (back !== null) roleByIndex[back] = 'back';
 
   const active = PRODUCTS[activeIndex];
-  const ghostScale = Math.min(1, GHOST_REFERENCE_LENGTH / active.ghostWord.length);
 
   return (
     <div
@@ -191,7 +185,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
             key={activeIndex}
             style={{
               fontFamily: "'Anton', sans-serif",
-              fontSize: `clamp(${90 * ghostScale}px, ${28 * ghostScale}vw, ${380 * ghostScale}px)`,
+              fontSize: 'clamp(90px, 28vw, 380px)',
               fontWeight: 900,
               color: '#fff',
               opacity: 1,
