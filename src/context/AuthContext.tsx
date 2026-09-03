@@ -221,6 +221,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (code === 'auth/popup-closed-by-user') {
           return { error: 'Se cerró la ventana antes de completar el inicio de sesión.' };
         }
+        // Google bloquea su propio inicio de sesión dentro de navegadores
+        // integrados (el de Telegram, WhatsApp, Instagram, etc. al abrir un
+        // link sin salir de la app) — no es un problema de esta web, y no
+        // hay forma de arreglarlo desde el código: hay que salir a un
+        // navegador real, o usar usuario/correo y contraseña en su lugar.
+        if (
+          code === 'auth/popup-blocked' ||
+          code === 'auth/operation-not-supported-in-this-environment' ||
+          code === 'auth/internal-error' ||
+          code === 'auth/unauthorized-domain'
+        ) {
+          return {
+            error:
+              'Este navegador no permite iniciar sesión con Google (pasa dentro de apps como Telegram o WhatsApp). Abre este enlace en Chrome o Safari, o inicia sesión con tu usuario/correo y contraseña.',
+          };
+        }
         return { error: friendlyAuthError(code) };
       }
     },

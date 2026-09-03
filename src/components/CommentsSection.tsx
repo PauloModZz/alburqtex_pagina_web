@@ -4,7 +4,7 @@ import { ImagePlus, X } from 'lucide-react';
 import { db, isFirebaseConfigured } from '../lib/firebase';
 import { useApprovedComments } from '../lib/useApprovedComments';
 import { useAuth } from '../context/AuthContext';
-import { notifyNewComment } from '../lib/telegram';
+import { notifyNewComment, generateApproveToken } from '../lib/telegram';
 import { compressImage } from '../lib/image';
 import StarRating from './StarRating';
 import Reveal from './layout/Reveal';
@@ -88,19 +88,21 @@ export default function CommentsSection({ onRequireAuth }: CommentsSectionProps)
       const fotoUrl = photo ? await compressImage(photo) : undefined;
 
       const displayName = user.displayName || 'Cliente Alburqtex';
-      await addDoc(collection(db, 'comentarios'), {
+      const approveToken = generateApproveToken();
+      const docRef = await addDoc(collection(db, 'comentarios'), {
         uid: user.uid,
         displayName,
         rating,
         text: trimmed,
         ...(fotoUrl ? { fotoUrl } : {}),
         status: 'pendiente',
+        approveToken,
         createdAt: serverTimestamp(),
       });
 
       // Aviso de mejor esfuerzo — si falla, el comentario ya quedó guardado
       // y sigue visible en /admin/comentarios de todas formas.
-      notifyNewComment({ displayName, rating, text: trimmed, photoDataUri: fotoUrl });
+      notifyNewComment({ id: docRef.id, approveToken, displayName, rating, text: trimmed, photoDataUri: fotoUrl });
 
       setSent(true);
       setText('');

@@ -90,6 +90,10 @@ service cloud.firestore {
       // con una foto opcional guardada como data URI (no hay Storage detrás
       // de este proyecto) — como texto, con un tope de tamaño generoso pero
       // bien por debajo del límite de 1MB por documento de Firestore.
+      // También lleva un "approveToken" al azar: es lo que permite aprobar
+      // o rechazar tocando el botón del aviso de Telegram sin tener que
+      // iniciar sesión — funciona como el link de un correo de "cancelar
+      // suscripción": quien conoce el código puede usarlo, y nadie más.
       allow create: if request.auth != null
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.status == 'pendiente'
@@ -100,19 +104,41 @@ service cloud.firestore {
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 500
         && !request.resource.data.text.matches('(?i).*(https?://|www\\.).*')
+        && request.resource.data.approveToken is string
+        && request.resource.data.approveToken.size() >= 20
         && (!('fotoUrl' in request.resource.data)
             || (request.resource.data.fotoUrl.matches('^data:image/jpeg;base64,.*')
                 && request.resource.data.fotoUrl.size() < 700000));
 
-      // Solo el admin puede aprobar, y solo cambiando el campo "status" (no
-      // puede reescribir el texto/calificación de alguien más).
-      allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && request.resource.data.status == 'aprobado';
+      // Dos formas de aprobar/rechazar:
+      // 1) El admin logueado, desde la lista de /admin/comentarios (no
+      //    necesita el token, solo cambia "status" a "aprobado").
+      // 2) Cualquiera que mande el approveToken correcto de vuelta junto
+      //    con el nuevo "status" — así el botón del aviso de Telegram
+      //    aprueba/rechaza al toque, sin pedir inicio de sesión. Nunca deja
+      //    tocar ningún otro campo del comentario.
+      allow update: if
+        (isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status == 'aprobado')
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'approveToken'])
+          && request.resource.data.approveToken == resource.data.approveToken
+          && request.resource.data.status in ['aprobado', 'rechazado']);
 
       // El autor puede borrar su propio comentario; el admin puede borrar
-      // cualquiera (esa es la acción de "rechazar").
+      // cualquiera desde la lista (rechazar por token es un update, arriba,
+      // no un delete — un delete no puede llevar el token de vuelta).
       allow delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.uid);
+    }
+
+    // Personas adicionales (aparte del admin) que reciben el aviso de
+    // Telegram por comentario nuevo. Lectura pública porque quien envía el
+    // aviso es el navegador de quien comenta (sin sesión de admin) — un
+    // chat_id de Telegram no sirve de nada sin el token del bot, así que
+    // verlo no es sensible. Solo el admin puede agregar/quitar gente.
+    match /telegramRecipients/{chatId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     // Contador de intentos fallidos de inicio de sesión, para el captcha al
