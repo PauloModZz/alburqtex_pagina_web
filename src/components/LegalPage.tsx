@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { LEGAL_LAST_UPDATED, LEGAL_SECTIONS } from '../data/legal';
 import { WHATSAPP_LINK } from '../data/products';
@@ -10,7 +10,11 @@ interface LegalPageProps {
   scrollToId?: string;
 }
 
+const SECTION_IDS = LEGAL_SECTIONS.map((section) => section.id);
+
 export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
+  const [activeId, setActiveId] = useState<string>(SECTION_IDS[0]);
+
   useEffect(() => {
     if (scrollToId) {
       document.getElementById(scrollToId)?.scrollIntoView({ behavior: 'smooth' });
@@ -18,6 +22,26 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
       window.scrollTo(0, 0);
     }
   }, [scrollToId]);
+
+  // Resalta en el menú de la izquierda la sección que se está viendo en ese
+  // momento — mismo efecto que en Guía de tallas.
+  useEffect(() => {
+    const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
@@ -61,7 +85,12 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
-                  className="text-xs text-black/55 hover:text-black transition-colors leading-snug block"
+                  className="text-xs transition-colors leading-snug block border-l-2 pl-2.5 -ml-px"
+                  style={
+                    activeId === section.id
+                      ? { color: '#141414', fontWeight: 700, borderColor: GOLD }
+                      : { color: 'rgba(0,0,0,0.55)', borderColor: 'transparent' }
+                  }
                 >
                   {section.title}
                 </a>
