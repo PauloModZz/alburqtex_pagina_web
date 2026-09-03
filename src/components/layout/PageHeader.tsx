@@ -16,17 +16,27 @@ interface PageHeaderProps {
 export default function PageHeader({ eyebrow, title, description, extra }: PageHeaderProps) {
   const navigate = useNavigate();
 
+  // Vuelve a la página anterior de verdad (guía de tallas, catálogo, un
+  // artículo del blog...), no siempre al inicio. Si no hay una página
+  // anterior dentro del sitio (se entró directo por un link externo), no
+  // hay a dónde "volver" dentro del historial, así que ahí sí cae al inicio.
+  const handleBack = () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
+    else navigate('/');
+  };
+
   return (
     <header className="border-b" style={{ backgroundColor: '#FAF7F2', borderColor: 'rgba(0,0,0,0.08)' }}>
       <SiteNav />
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-5 pb-4">
         <button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={handleBack}
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors mb-4"
         >
           <ArrowLeft size={16} strokeWidth={2.25} />
-          Inicio
+          Volver
         </button>
         <span
           className="text-xs font-semibold uppercase tracking-widest block mb-2"

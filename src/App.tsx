@@ -1,5 +1,5 @@
 import { lazy, Suspense, useLayoutEffect, useState, type ReactNode } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import Hero from './components/Hero';
 import AboutSection from './components/AboutSection';
 import ClientsSection from './components/ClientsSection';
@@ -44,12 +44,19 @@ function RouteFallback() {
   );
 }
 
-/** Cada ruta nueva comienza arriba, sin heredar el scroll de la página anterior. */
+/**
+ * Cada ruta nueva comienza arriba, sin heredar el scroll de la página
+ * anterior — pero solo al entrar a una página (PUSH). Al volver con
+ * "Volver"/atrás del navegador (POP), se deja que el navegador restaure la
+ * posición donde estabas, en vez de forzar el scroll arriba también ahí.
+ */
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
 
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
+    if (navigationType !== 'POP') window.scrollTo(0, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return null;
