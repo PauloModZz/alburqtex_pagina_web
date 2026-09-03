@@ -95,10 +95,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
   return (
     <div className="min-h-screen w-full" style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}>
       <SiteNav />
-      <header
-        className="sticky top-0 z-40 border-b"
-        style={{ backgroundColor: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(8px)', borderColor: 'rgba(0,0,0,0.08)' }}
-      >
+      <header className="border-b" style={{ backgroundColor: '#FAF7F2', borderColor: 'rgba(0,0,0,0.08)' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-5 pb-4">
           <button
             type="button"

@@ -95,13 +95,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
       className="min-h-screen w-full"
       style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}
     >
-      {/* Header pegajoso reducido a una sola fila (volver/cuenta/carrito/menú) —
-          título, buscador y categorías viven en <main> para no tapar el catálogo
-          al hacer scroll, mismo patrón que ya usan galería y preguntas frecuentes. */}
-      <header
-        className="sticky top-0 z-40 border-b"
-        style={{ backgroundColor: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(8px)', borderColor: 'rgba(0,0,0,0.08)' }}
-      >
+      <header className="border-b" style={{ backgroundColor: '#FAF7F2', borderColor: 'rgba(0,0,0,0.08)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
           <button
             type="button"
