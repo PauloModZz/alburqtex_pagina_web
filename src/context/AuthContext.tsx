@@ -9,11 +9,13 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   deleteUser,
+  getRedirectResult,
   onAuthStateChanged,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   updatePassword as firebaseUpdatePassword,
   updateProfile,
@@ -83,6 +85,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(u);
       setLoading(false);
     });
+    // Recoge el resultado si veníamos de vuelta de signInWithRedirect (el
+    // respaldo de "Continuar con Google" cuando la ventana emergente falla,
+    // como pasa en Safari por su bloqueo de privacidad) — onAuthStateChanged
+    // ya dispara igual, esto solo evita que un error del redirect se pierda
+    // en silencio.
+    getRedirectResult(auth).catch(() => {});
     return unsubscribe;
   }, []);
 
@@ -221,21 +229,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (code === 'auth/popup-closed-by-user') {
           return { error: 'Se cerró la ventana antes de completar el inicio de sesión.' };
         }
-        // Google bloquea su propio inicio de sesión dentro de navegadores
-        // integrados (el de Telegram, WhatsApp, Instagram, etc. al abrir un
-        // link sin salir de la app) — no es un problema de esta web, y no
-        // hay forma de arreglarlo desde el código: hay que salir a un
-        // navegador real, o usar usuario/correo y contraseña en su lugar.
+        // La ventana emergente de Google falla en varios casos reales: la
+        // protección de privacidad de Safari (bloquea el acceso a cookies
+        // entre la ventana y la página), navegadores integrados como el de
+        // Telegram/WhatsApp, o el bloqueador de ventanas emergentes de
+        // cualquier navegador. En vez de solo mostrar un error, se
+        // reintenta con signInWithRedirect (toda la página navega a Google
+        // y vuelve) — funciona en todos esos casos porque no depende de
+        // ventanas emergentes ni de compartir cookies entre ventanas.
         if (
           code === 'auth/popup-blocked' ||
           code === 'auth/operation-not-supported-in-this-environment' ||
           code === 'auth/internal-error' ||
           code === 'auth/unauthorized-domain'
         ) {
-          return {
-            error:
-              'Este navegador no permite iniciar sesión con Google (pasa dentro de apps como Telegram o WhatsApp). Abre este enlace en Chrome o Safari, o inicia sesión con tu usuario/correo y contraseña.',
-          };
+          await signInWithRedirect(auth, googleProvider);
+          // La página ya está navegando a Google; esto no llega a usarse.
+          return { error: null };
         }
         return { error: friendlyAuthError(code) };
       }
