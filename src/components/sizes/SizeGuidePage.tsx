@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Ruler, XCircle } from 'lucide-react';
 import PageHeader from '../layout/PageHeader';
@@ -164,8 +164,34 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
   );
 }
 
+// Mismo orden en que las secciones aparecen en la página, para que el menú
+// de la izquierda sepa cuál resaltar según el scroll.
+const SECTION_IDS = [...SIZE_GUIDES.map((g) => g.id), 'ubicaciones', 'como-medirte', 'tejidos'];
+
 export default function SizeGuidePage() {
   const [unidad, setUnidad] = useState<'cm' | 'in'>('cm');
+  const [activeId, setActiveId] = useState<string>(SECTION_IDS[0]);
+
+  // Resalta en el menú de la izquierda la sección que se está viendo en ese
+  // momento — se observa una franja angosta cerca del top del viewport, y la
+  // sección que la cruza al hacer scroll se marca como activa.
+  useEffect(() => {
+    const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useSeo({
     title: 'Guía de tallas y tipos de prenda',
@@ -216,21 +242,38 @@ export default function SizeGuidePage() {
           <ul className="space-y-2">
             {SIZE_GUIDES.map((g) => (
               <li key={g.id}>
-                <a href={`#${g.id}`} className="text-xs text-black/55 hover:text-black transition-colors leading-snug block">
+                <a
+                  href={`#${g.id}`}
+                  className="text-xs transition-colors leading-snug block border-l-2 pl-2.5 -ml-px"
+                  style={
+                    activeId === g.id
+                      ? { color: '#141414', fontWeight: 700, borderColor: GOLD }
+                      : { color: 'rgba(0,0,0,0.55)', borderColor: 'transparent' }
+                  }
+                >
                   {g.nombre}
                 </a>
               </li>
             ))}
             <li className="pt-2 mt-2 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-              <a href="#como-medirte" className="text-xs text-black/55 hover:text-black transition-colors block py-1">
-                Cómo medirte bien
-              </a>
-              <a href="#tejidos" className="text-xs text-black/55 hover:text-black transition-colors block py-1">
-                Qué tejido elegir
-              </a>
-              <a href="#ubicaciones" className="text-xs text-black/55 hover:text-black transition-colors block py-1">
-                Dónde va el bordado
-              </a>
+              {[
+                { id: 'ubicaciones', label: 'Dónde va el bordado' },
+                { id: 'como-medirte', label: 'Cómo medirte bien' },
+                { id: 'tejidos', label: 'Qué tejido elegir' },
+              ].map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  className="text-xs transition-colors block py-1 border-l-2 pl-2.5 -ml-px"
+                  style={
+                    activeId === link.id
+                      ? { color: '#141414', fontWeight: 700, borderColor: GOLD }
+                      : { color: 'rgba(0,0,0,0.55)', borderColor: 'transparent' }
+                  }
+                >
+                  {link.label}
+                </a>
+              ))}
             </li>
           </ul>
         </nav>
@@ -247,6 +290,49 @@ export default function SizeGuidePage() {
           {SIZE_GUIDES.map((guide) => (
             <GarmentBlock key={guide.id} guide={guide} unidad={unidad} />
           ))}
+
+          {/* Ubicaciones */}
+          <section id="ubicaciones" className="scroll-mt-28 py-12 border-b" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+            <span className="text-xs font-semibold uppercase tracking-widest block mb-3" style={{ color: GOLD }}>
+              Dónde va el bordado
+            </span>
+            <h2 className="text-xl font-bold text-black/90 mb-6">Ubicaciones y medida máxima</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {UBICACIONES_BORDADO.map((u) => (
+                <div key={u.id} className="rounded-xl border p-4" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <Ruler size={16} strokeWidth={2} style={{ color: GOLD }} />
+                      <span className="text-sm text-black/80">{u.nombre}</span>
+                    </div>
+                    <span className="text-xs font-semibold text-black/50 whitespace-nowrap">{u.medidaMaxima}</span>
+                  </div>
+                  {u.nota && <p className="text-xs text-black/45 leading-relaxed mt-2 pl-7">{u.nota}</p>}
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-black/40 mt-4">
+              Medidas máximas de referencia — según la prenda exacta y el bastidor disponible pueden variar un poco.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3 mt-6">
+              <Link
+                to="/blog/guia-ubicaciones-bordado"
+                className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
+                style={{ borderColor: 'rgba(0,0,0,0.07)' }}
+              >
+                <p className="text-sm font-semibold text-black/85">Guía completa de ubicaciones</p>
+                <p className="text-xs text-black/50 mt-1">Qué comunica cada zona y por qué elegirla.</p>
+              </Link>
+              <Link
+                to="/blog/bordado-en-gorras"
+                className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
+                style={{ borderColor: 'rgba(0,0,0,0.07)' }}
+              >
+                <p className="text-sm font-semibold text-black/85">Bordado en gorras</p>
+                <p className="text-xs text-black/50 mt-1">Estructurada vs. no estructurada, plano vs. 3D.</p>
+              </Link>
+            </div>
+          </section>
 
           {/* Cómo medirte bien */}
           <section id="como-medirte" className="scroll-mt-28 py-12 border-b" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
@@ -276,7 +362,7 @@ export default function SizeGuidePage() {
           </section>
 
           {/* Tejidos */}
-          <section id="tejidos" className="scroll-mt-28 py-12 border-b" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+          <section id="tejidos" className="scroll-mt-28 py-12">
             <span className="text-xs font-semibold uppercase tracking-widest block mb-3" style={{ color: GOLD }}>
               Qué prenda elegir para bordar
             </span>
@@ -313,46 +399,6 @@ export default function SizeGuidePage() {
               ¿Bordado o estampado? Lee la comparativa completa
               <ArrowRight size={14} strokeWidth={2.25} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-          </section>
-
-          {/* Ubicaciones */}
-          <section id="ubicaciones" className="scroll-mt-28 py-12">
-            <span className="text-xs font-semibold uppercase tracking-widest block mb-3" style={{ color: GOLD }}>
-              Dónde va el bordado
-            </span>
-            <h2 className="text-xl font-bold text-black/90 mb-6">Ubicaciones y medida máxima</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {UBICACIONES_BORDADO.map((u) => (
-                <div key={u.id} className="rounded-xl border p-4 flex items-center justify-between gap-3" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
-                  <div className="flex items-center gap-3">
-                    <Ruler size={16} strokeWidth={2} style={{ color: GOLD }} />
-                    <span className="text-sm text-black/80">{u.nombre}</span>
-                  </div>
-                  <span className="text-xs font-semibold text-black/50 whitespace-nowrap">{u.medidaMaxima}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-black/40 mt-4">
-              Medidas máximas de referencia — según la prenda exacta y el bastidor disponible pueden variar un poco.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-3 mt-6">
-              <Link
-                to="/blog/guia-ubicaciones-bordado"
-                className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
-                style={{ borderColor: 'rgba(0,0,0,0.07)' }}
-              >
-                <p className="text-sm font-semibold text-black/85">Guía completa de ubicaciones</p>
-                <p className="text-xs text-black/50 mt-1">Qué comunica cada zona y por qué elegirla.</p>
-              </Link>
-              <Link
-                to="/blog/bordado-en-gorras"
-                className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
-                style={{ borderColor: 'rgba(0,0,0,0.07)' }}
-              >
-                <p className="text-sm font-semibold text-black/85">Bordado en gorras</p>
-                <p className="text-xs text-black/50 mt-1">Estructurada vs. no estructurada, plano vs. 3D.</p>
-              </Link>
-            </div>
           </section>
         </div>
       </div>

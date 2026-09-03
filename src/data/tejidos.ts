@@ -86,12 +86,19 @@ export interface UbicacionBordado {
   nombre: string;
   medidaMaxima: string;
   anchor: { x: number; y: number };
+  nota?: string;
 }
 
 export const UBICACIONES_BORDADO: UbicacionBordado[] = [
   { id: 'pecho-izquierdo', nombre: 'Pecho izquierdo', medidaMaxima: '10 × 10 cm', anchor: { x: 38, y: 30 } },
   { id: 'pecho-centrado', nombre: 'Pecho centrado', medidaMaxima: '20 × 20 cm', anchor: { x: 50, y: 32 } },
-  { id: 'espalda-completa', nombre: 'Espalda completa', medidaMaxima: '30 × 35 cm', anchor: { x: 50, y: 28 } },
+  {
+    id: 'espalda-completa',
+    nombre: 'Espalda completa',
+    medidaMaxima: '35 × 35 cm',
+    anchor: { x: 50, y: 28 },
+    nota: 'Para llegar a esta medida se desarma la espalda de la prenda antes de bordar (se abre la costura) y se vuelve a coser después.',
+  },
   { id: 'manga', nombre: 'Manga', medidaMaxima: '8 × 8 cm', anchor: { x: 80, y: 40 } },
   { id: 'cuello-posterior', nombre: 'Cuello posterior', medidaMaxima: '12 × 4 cm', anchor: { x: 50, y: 10 } },
   { id: 'frontal-gorra', nombre: 'Frontal de gorra', medidaMaxima: '11 × 6 cm', anchor: { x: 50, y: 45 } },
