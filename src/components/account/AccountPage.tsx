@@ -3,7 +3,7 @@ import { ArrowLeft, Check, LogOut, X } from 'lucide-react';
 import { collection, getDocs, orderBy, query, where, type Timestamp } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../lib/firebase';
-import { checkPasswordStrength } from '../../lib/validators';
+import { checkPasswordStrength, PASSWORD_REQUIREMENTS } from '../../lib/validators';
 import { sizeLabel } from '../../lib/format';
 import SiteNav from '../layout/SiteNav';
 
@@ -151,21 +151,20 @@ export default function AccountPage({ onBack }: AccountPageProps) {
               className="w-full text-sm rounded-full border border-black/10 px-4 py-2.5 outline-none focus:border-black/30 transition-colors"
             />
             {newPassword.length > 0 && (
-              <ul className="text-xs space-y-1 pl-1">
-                {[
-                  { label: 'Al menos 8 caracteres', ok: newPassword.length >= 8 },
-                  { label: 'Al menos una letra', ok: /[a-zA-Z]/.test(newPassword) },
-                  { label: 'Al menos un número', ok: /[0-9]/.test(newPassword) },
-                ].map((req) => (
-                  <li key={req.label} className="flex items-center gap-1.5">
-                    {req.ok ? (
-                      <Check size={12} strokeWidth={3} className="text-green-600" />
-                    ) : (
-                      <X size={12} strokeWidth={3} className="text-black/25" />
-                    )}
-                    <span className={req.ok ? 'text-black/50' : 'text-black/35'}>{req.label}</span>
-                  </li>
-                ))}
+              <ul className="text-xs grid grid-cols-2 gap-x-3 gap-y-1 pl-1">
+                {PASSWORD_REQUIREMENTS.map((req) => {
+                  const ok = req.test(newPassword);
+                  return (
+                    <li key={req.label} className="flex items-center gap-1.5">
+                      {ok ? (
+                        <Check size={12} strokeWidth={3} className="text-green-600 shrink-0" />
+                      ) : (
+                        <X size={12} strokeWidth={3} className="text-black/25 shrink-0" />
+                      )}
+                      <span className={ok ? 'text-black/50' : 'text-black/35'}>{req.label}</span>
+                    </li>
+                  );
+                })}
               </ul>
             )}
             <input

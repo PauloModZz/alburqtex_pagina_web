@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { ArrowLeft, Check, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { isFirebaseConfigured } from '../../lib/firebase';
-import { checkPasswordStrength, isValidEmail } from '../../lib/validators';
+import { checkPasswordStrength, isValidEmail, PASSWORD_REQUIREMENTS } from '../../lib/validators';
 import { isValidUsername } from '../../lib/identifiers';
 import { DEFAULT_COUNTRY, toE164, type CountryCode } from '../../lib/phone';
 import PhoneInput from '../PhoneInput';
@@ -34,6 +34,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
   const [info, setInfo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [registerAttempts, setRegisterAttempts] = useState(0);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [loginShowCaptcha, setLoginShowCaptcha] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | undefined>(undefined);
 
@@ -260,28 +261,28 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setPasswordFocused(true)}
               placeholder="Contraseña"
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
               autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
             />
           )}
 
-          {mode === 'register' && password.length > 0 && (
-            <ul className="text-xs space-y-1 -mt-1 pl-1">
-              {[
-                { label: 'Al menos 8 caracteres', ok: password.length >= 8 },
-                { label: 'Al menos una letra', ok: /[a-zA-Z]/.test(password) },
-                { label: 'Al menos un número', ok: /[0-9]/.test(password) },
-              ].map((req) => (
-                <li key={req.label} className="flex items-center gap-1.5">
-                  {req.ok ? (
-                    <Check size={12} strokeWidth={3} className="text-green-600" />
-                  ) : (
-                    <X size={12} strokeWidth={3} className="text-black/25" />
-                  )}
-                  <span className={req.ok ? 'text-black/50' : 'text-black/35'}>{req.label}</span>
-                </li>
-              ))}
+          {mode === 'register' && (passwordFocused || password.length > 0) && (
+            <ul className="text-xs grid grid-cols-2 gap-x-3 gap-y-1 -mt-1 pl-1">
+              {PASSWORD_REQUIREMENTS.map((req) => {
+                const ok = req.test(password);
+                return (
+                  <li key={req.label} className="flex items-center gap-1.5 transition-colors">
+                    {ok ? (
+                      <Check size={12} strokeWidth={3} className="text-green-600 shrink-0" />
+                    ) : (
+                      <X size={12} strokeWidth={3} className="text-black/25 shrink-0" />
+                    )}
+                    <span className={ok ? 'text-black/50' : 'text-black/35'}>{req.label}</span>
+                  </li>
+                );
+              })}
             </ul>
           )}
 
