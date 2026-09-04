@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ImageOff, Menu, Search, ShoppingBag, User, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronDown, ImageOff, Menu, Search, ShoppingBag, User, X } from 'lucide-react';
 import { CATALOG, CATEGORIES, type CatalogProduct } from '../data/catalog';
 import { WHATSAPP_LINK } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -59,6 +59,94 @@ function InlineNavMenu() {
             </Link>
           ))}
         </nav>
+      )}
+    </div>
+  );
+}
+
+const CATEGORY_OPTIONS = ['Todas', ...CATEGORIES];
+
+const CATEGORY_COUNTS: Record<string, number> = CATEGORY_OPTIONS.reduce(
+  (acc, cat) => {
+    acc[cat] = cat === 'Todas' ? CATALOG.length : CATALOG.filter((p) => p.category === cat).length;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
+
+function CategoryFilterBar({ category, onChange }: { category: string; onChange: (cat: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onClickOutside);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative inline-block mb-8">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="flex items-center gap-2 text-sm rounded-full border pl-4 pr-3 py-2.5 transition-colors"
+        style={{
+          borderColor: open ? '#141414' : 'rgba(0,0,0,0.15)',
+          color: '#141414',
+          backgroundColor: '#fff',
+        }}
+      >
+        <span className="text-black/40">Categoría:</span>
+        <span className="font-semibold">{category}</span>
+        <ChevronDown
+          size={16}
+          strokeWidth={2.25}
+          className="text-black/40 transition-transform duration-200"
+          style={{ transform: open ? 'rotate(180deg)' : 'none' }}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          aria-label="Categorías"
+          className="absolute left-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] max-h-80 overflow-y-auto rounded-2xl bg-white shadow-xl border py-2 z-30"
+          style={{ borderColor: 'rgba(0,0,0,0.08)' }}
+        >
+          {CATEGORY_OPTIONS.map((opt) => {
+            const isActive = category === opt;
+            return (
+              <button
+                key={opt}
+                type="button"
+                role="option"
+                aria-selected={isActive}
+                onClick={() => {
+                  onChange(opt);
+                  setOpen(false);
+                }}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors hover:bg-black/5"
+                style={{ color: isActive ? GOLD : '#141414', fontWeight: isActive ? 700 : 500 }}
+              >
+                <Check size={14} strokeWidth={2.5} className={isActive ? 'opacity-100' : 'opacity-0'} />
+                <span className="flex-1">{opt}</span>
+                <span className="text-xs text-black/35">{CATEGORY_COUNTS[opt]}</span>
+              </button>
+            );
+          })}
+        </div>
       )}
     </div>
   );
@@ -171,27 +259,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
           />
         </div>
 
-        {/* Categorías: se envuelven en varias filas, todas visibles siempre (sin scroll oculto) */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {['Todas', ...CATEGORIES].map((cat) => {
-            const isActive = category === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategory(cat)}
-                className="text-xs font-semibold uppercase tracking-wide rounded-full px-3.5 py-2 sm:px-4 sm:py-2.5 transition-colors border"
-                style={
-                  isActive
-                    ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
-                    : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
-                }
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        <CategoryFilterBar category={category} onChange={setCategory} />
 
         {filtered.length === 0 ? (
           <div className="text-center py-24 text-black/40 text-sm">
