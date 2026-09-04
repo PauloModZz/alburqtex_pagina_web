@@ -15,6 +15,21 @@ const CAPTCHA_AFTER_ATTEMPTS = 3;
 
 type Mode = 'login' | 'register' | 'forgot';
 
+/** Mensaje de validación en vivo bajo un campo — verde si cumple, rojo si no. */
+function FieldHint({ show, ok, okLabel, badLabel }: { show: boolean; ok: boolean; okLabel: string; badLabel: string }) {
+  if (!show) return null;
+  return (
+    <p className="flex items-center gap-1.5 text-xs -mt-1.5 pl-1">
+      {ok ? (
+        <Check size={12} strokeWidth={3} className="text-green-600 shrink-0" />
+      ) : (
+        <X size={12} strokeWidth={3} className="text-red-500 shrink-0" />
+      )}
+      <span className={ok ? 'text-black/50' : 'text-red-600'}>{ok ? okLabel : badLabel}</span>
+    </p>
+  );
+}
+
 interface AuthPageProps {
   onBack: () => void;
   onAuthenticated: () => void;
@@ -228,6 +243,13 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
                 className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
                 autoComplete="username"
               />
+              <FieldHint
+                show={username.length > 0}
+                ok={isValidUsername(username)}
+                okLabel="Usuario válido"
+                badLabel='Mínimo 3 caracteres: letras, números, "_" o "."'
+              />
+
               <input
                 type="email"
                 value={email}
@@ -236,11 +258,24 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
                 className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
                 autoComplete="email"
               />
+              <FieldHint
+                show={email.length > 0}
+                ok={isValidEmail(email)}
+                okLabel="Correo válido"
+                badLabel="Ingresa un correo válido (ej: nombre@correo.com)"
+              />
+
               <PhoneInput
                 country={phoneCountry}
                 onCountryChange={setPhoneCountry}
                 value={phone}
                 onChange={setPhone}
+              />
+              <FieldHint
+                show={phone.length > 0}
+                ok={toE164(phone, phoneCountry) !== null}
+                okLabel="Número válido"
+                badLabel="Ingresa un número válido para el país elegido"
               />
             </>
           )}
@@ -294,6 +329,15 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               placeholder="Confirmar contraseña"
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
               autoComplete="new-password"
+            />
+          )}
+
+          {mode === 'register' && (
+            <FieldHint
+              show={confirmPassword.length > 0}
+              ok={confirmPassword === password}
+              okLabel="Las contraseñas coinciden"
+              badLabel="Las contraseñas no coinciden"
             />
           )}
 
