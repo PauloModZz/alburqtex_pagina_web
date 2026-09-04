@@ -306,23 +306,21 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                     </h3>
                     <p className="text-xs text-black/45 mb-3 line-clamp-1">{product.material}</p>
                     <div className="mt-auto flex flex-col gap-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-base font-bold text-black/90">
-                          ${product.price.toFixed(2)}
-                        </span>
-                        <a
-                          href={whatsappHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide rounded-full px-3 py-2 text-white transition-colors"
-                          style={{ backgroundColor: '#141414' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#141414')}
-                        >
-                          Cotizar
-                          <ArrowRight size={12} strokeWidth={2.5} />
-                        </a>
-                      </div>
+                      <span className="text-base font-bold text-black/90">
+                        ${product.price.toFixed(2)}
+                      </span>
+                      <a
+                        href={whatsappHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-1 text-[11px] font-semibold uppercase tracking-wide rounded-full py-2 text-white transition-colors"
+                        style={{ backgroundColor: '#141414' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#141414')}
+                      >
+                        Cotizar
+                        <ArrowRight size={12} strokeWidth={2.5} />
+                      </a>
                       <button
                         type="button"
                         onClick={() => setOrderingProduct(product)}
