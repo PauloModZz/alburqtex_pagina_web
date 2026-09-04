@@ -26,6 +26,7 @@ export default function BlogPostPage() {
           title: post.metaTitulo,
           description: post.metaDescripcion,
           path: `/blog/${post.slug}`,
+          image: `${SITE_URL}${post.imagen}`,
         }
       : { title: 'Blog', description: 'Blog de Alburqtex', path: '/blog' },
   );
@@ -41,6 +42,7 @@ export default function BlogPostPage() {
           datePublished: post.fecha,
           author: { '@type': 'Organization', name: SITE_NAME },
           mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+          image: `${SITE_URL}${post.imagen}`,
         }
       : null,
   );
@@ -67,6 +69,9 @@ export default function BlogPostPage() {
       <PageHeader eyebrow={CATEGORIA_LABEL[post.categoria]} title={post.titulo} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+        <figure className="aspect-[16/8] overflow-hidden rounded-2xl mb-8 bg-black/5">
+          <img src={post.imagen} alt={post.imagenAlt} className="w-full h-full object-cover" fetchPriority="high" />
+        </figure>
         <div className="flex items-center gap-4 text-xs text-black/45 mb-10 max-w-[68ch]">
           <span>{formatFecha(post.fecha)}</span>
           <span className="flex items-center gap-1">

@@ -78,15 +78,13 @@ export default function BlogIndexPage() {
             className="group grid sm:grid-cols-[1.1fr_1fr] gap-6 rounded-2xl overflow-hidden bg-white border mb-12 transition-shadow hover:shadow-lg"
             style={{ borderColor: 'rgba(0,0,0,0.07)' }}
           >
-            <div
-              className="aspect-[16/10] sm:aspect-auto flex items-center justify-center p-8"
-              style={{ backgroundColor: 'rgba(201,151,63,0.12)' }}
-            >
-              <span
-                style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(28px, 5vw, 44px)', color: GOLD, lineHeight: 1.05, textTransform: 'uppercase' }}
-              >
-                {featured.titulo}
-              </span>
+            <div className="aspect-[16/10] sm:aspect-auto overflow-hidden bg-black/5">
+              <img
+                src={featured.imagen}
+                alt={featured.imagenAlt}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                fetchPriority="high"
+              />
             </div>
             <div className="p-6 sm:p-8 flex flex-col justify-center">
               <span className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>
@@ -117,11 +115,13 @@ export default function BlogIndexPage() {
                 className="group flex flex-col h-full rounded-2xl overflow-hidden bg-white border transition-shadow hover:shadow-lg"
                 style={{ borderColor: 'rgba(0,0,0,0.06)' }}
               >
-                <div
-                  className="aspect-[16/10] flex items-center justify-center p-6"
-                  style={{ backgroundColor: 'rgba(201,151,63,0.08)' }}
-                >
-                  <span className="text-xs font-semibold text-center text-black/40 leading-snug">{CATEGORIA_LABEL[post.categoria]}</span>
+                <div className="aspect-[16/10] overflow-hidden bg-black/5">
+                  <img
+                    src={post.imagen}
+                    alt={post.imagenAlt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="p-5 flex flex-col flex-1">
                   <span className="text-[10px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: GOLD }}>

@@ -18,6 +18,8 @@ export type ContentBlock =
 export interface BlogPost {
   slug: string;
   titulo: string;
+  imagen: string;
+  imagenAlt: string;
   categoria: Categoria;
   extracto: string;
   tiempoLectura: number;
@@ -34,6 +36,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'bordado-vs-estampado',
     titulo: 'Bordado vs. estampado: cuál te conviene según lo que vayas a hacer',
+    imagen: '/blog/bordado-vs-estampado.jpg',
+    imagenAlt: 'Muestras textiles que comparan un diseño bordado con uno estampado',
     categoria: 'antes-de-pedir',
     extracto:
       'No hay una técnica "mejor" en absoluto — hay una mejor para tu caso. Comparamos durabilidad, costo, tejidos y tacto para que elijas con criterio, no a la moneda.',
@@ -101,6 +105,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'que-archivo-necesito',
     titulo: 'Qué archivo necesito para bordar mi logo',
+    imagen: '/blog/que-archivo-necesito.jpg',
+    imagenAlt: 'Diseño digital de un motivo junto a su muestra bordada en bastidor',
     categoria: 'antes-de-pedir',
     extracto:
       'Vectorial, mapa de bits, DST, EMB... si nunca has mandado un logo a bordar, esto aclara qué formato enviar y por qué una captura de WhatsApp casi nunca sirve.',
@@ -172,6 +178,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'que-es-el-ponchado',
     titulo: 'Qué es el ponchado y por qué se cobra aparte',
+    imagen: '/blog/que-es-el-ponchado.jpg',
+    imagenAlt: 'Programa de ponchado mostrando las rutas de puntada de un diseño geométrico',
     categoria: 'tecnica',
     extracto:
       'Es la pregunta que más genera confusión en la primera cotización: por qué hay un costo extra si "solo es bordar mi logo". Aquí explicamos qué es exactamente ese trabajo.',
@@ -226,6 +234,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'de-que-depende-el-precio',
     titulo: 'De qué depende el precio de un bordado',
+    imagen: '/blog/de-que-depende-el-precio.jpg',
+    imagenAlt: 'Prenda, hilos, bastidor, cinta métrica y calculadora para cotizar un bordado',
     categoria: 'antes-de-pedir',
     extracto:
       'Dos logos "del mismo tamaño" pueden costar distinto. Desglosamos, con un ejemplo trabajado paso a paso, qué factores realmente mueven el precio de un bordado.',
@@ -304,6 +314,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'bordado-en-gorras',
     titulo: 'Bordado en gorras: lo que debes saber antes de pedir',
+    imagen: '/blog/bordado-en-gorras.jpg',
+    imagenAlt: 'Gorra negra colocada en una máquina industrial durante el bordado',
     categoria: 'tecnica',
     extracto:
       'Estructurada o no estructurada, plano o 3D — la gorra es de las prendas más pedidas y de las que más dudas generan. Esto es lo que hay que saber antes de diseñar el logo.',
@@ -368,6 +380,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'cuidar-prenda-bordada',
     titulo: 'Cómo cuidar una prenda bordada para que dure años',
+    imagen: '/blog/cuidar-prenda-bordada.jpg',
+    imagenAlt: 'Manos preparando cuidadosamente una prenda bordada para lavarla',
     categoria: 'cuidados',
     extracto:
       'El bordado en sí es duradero, pero el cuidado en casa hace la diferencia entre que se vea nuevo dos años después o que se estropee en pocos lavados.',
@@ -439,6 +453,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'guia-ubicaciones-bordado',
     titulo: 'Guía de ubicaciones de bordado: dónde poner tu logo y por qué',
+    imagen: '/blog/guia-ubicaciones-bordado.jpg',
+    imagenAlt: 'Polo, gorra, manga y mandil con bordados ubicados en distintas zonas',
     categoria: 'tecnica',
     extracto:
       'Pecho izquierdo, espalda completa, manga, cuello posterior... cada ubicación comunica algo distinto y tiene su propio límite de tamaño. Aquí el recorrido completo.',
@@ -512,6 +528,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'uniformes-para-empresas',
     titulo: 'Uniformes bordados para empresas: cómo planificar el pedido',
+    imagen: '/blog/uniformes-para-empresas.jpg',
+    imagenAlt: 'Equipo revisando prendas, telas, tallas y colores para un pedido de uniformes',
     categoria: 'para-empresas',
     extracto:
       'Un pedido de uniformes bien planificado ahorra reprocesos, tiempo y dinero. Cómo levantar el cuadro de tallas, cuánto margen de reposición dejar y cómo mantener el color idéntico entre lotes.',
@@ -580,6 +598,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'confeccion-de-uniformes-desde-cero',
     titulo: 'Confección de uniformes desde cero: así funciona el proceso',
+    imagen: '/blog/confeccion-de-uniformes-desde-cero.jpg',
+    imagenAlt: 'Mesa de confección con patrones, piezas cortadas y un uniforme terminado',
     categoria: 'tecnica',
     extracto:
       'No solo bordamos y estampamos — también confeccionamos la prenda desde la tela. Así es el proceso completo, del patronaje a la prenda terminada, y cuándo tiene sentido pedirlo así en vez de personalizar algo ya hecho.',
@@ -631,6 +651,8 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'confeccion-vs-prenda-personalizada',
     titulo: '¿Confeccionar tu uniforme desde cero o personalizar uno ya hecho? Cómo elegir',
+    imagen: '/blog/confeccion-vs-prenda-personalizada.jpg',
+    imagenAlt: 'Comparación entre confeccionar una camisa y bordar una prenda ya terminada',
     categoria: 'antes-de-pedir',
     extracto:
       'Las dos opciones dan un uniforme con tu logo — pero no cuestan lo mismo, ni tardan lo mismo, ni te dan el mismo control. Comparamos costo, plazo, exclusividad y cantidad mínima para que decidas con información real.',
