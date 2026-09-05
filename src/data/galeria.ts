@@ -1,5 +1,23 @@
-export type Prenda = 'gorras' | 'polos' | 'camisas' | 'chompas' | 'mandiles' | 'toallas' | 'mochilas';
-export type Tecnica = 'plano' | '3d' | 'aplique' | 'parche' | 'monograma';
+export type Prenda =
+  | 'gorras'
+  | 'polos'
+  | 'camisetas'
+  | 'camisas'
+  | 'uniformes'
+  | 'chompas'
+  | 'mandiles'
+  | 'bolsas'
+  | 'toallas'
+  | 'mochilas';
+export type Tecnica =
+  | 'plano'
+  | '3d'
+  | 'aplique'
+  | 'parche'
+  | 'monograma'
+  | 'estampado'
+  | 'sublimacion'
+  | 'confeccion';
 export type Sector =
   | 'restaurantes'
   | 'salud'
@@ -13,9 +31,12 @@ export type Sector =
 export const PRENDA_LABEL: Record<Prenda, string> = {
   gorras: 'Gorras',
   polos: 'Polos',
+  camisetas: 'Camisetas',
   camisas: 'Camisas',
+  uniformes: 'Uniformes',
   chompas: 'Chompas',
   mandiles: 'Mandiles',
+  bolsas: 'Bolsas de tela',
   toallas: 'Toallas',
   mochilas: 'Mochilas',
 };
@@ -26,6 +47,9 @@ export const TECNICA_LABEL: Record<Tecnica, string> = {
   aplique: 'Aplique',
   parche: 'Parche bordado',
   monograma: 'Monograma',
+  estampado: 'Estampado textil',
+  sublimacion: 'Sublimación',
+  confeccion: 'Confección textil',
 };
 
 export const SECTOR_LABEL: Record<Sector, string> = {
@@ -45,8 +69,9 @@ export interface GalleryPiece {
   prenda: Prenda;
   tecnica: Tecnica;
   sector: Sector;
-  puntadasAprox: number;
-  coloresHilo: number;
+  puntadasAprox?: number;
+  coloresHilo?: number;
+  detalleTecnico?: string;
   reto: string;
   /** Ruta pública de la fotografía o muestra visual. */
   imagen: string;
@@ -57,6 +82,78 @@ export interface GalleryPiece {
 }
 
 export const GALLERY_PIECES: GalleryPiece[] = [
+  {
+    id: 'camiseta-estampada-ilustracion',
+    titulo: 'Camiseta estampada a todo color',
+    prenda: 'camisetas',
+    tecnica: 'estampado',
+    sector: 'eventos',
+    detalleTecnico: 'Estampado multicolor · algodón',
+    reto:
+      'Una ilustración con muchos colores y detalles finos necesitaba conservar contraste sobre una camiseta negra. Se preparó una base clara y se controló el registro de cada tono para lograr un acabado nítido y uniforme.',
+    imagen: 'galeria/camiseta-estampada-ilustracion.jpg',
+    esImagenReferencial: true,
+  },
+  {
+    id: 'bolsas-estampadas-evento',
+    titulo: 'Bolsas de tela estampadas para evento',
+    prenda: 'bolsas',
+    tecnica: 'estampado',
+    sector: 'eventos',
+    detalleTecnico: 'Estampado a una tinta · lona de algodón',
+    reto:
+      'El pedido requería que el mismo gráfico quedara centrado y consistente en todo el lote. Se ajustó la presión y la ubicación para mantener bordes limpios sobre la textura natural de la lona.',
+    imagen: 'galeria/bolsas-estampadas-evento.jpg',
+    esImagenReferencial: true,
+  },
+  {
+    id: 'uniforme-futbol-sublimado',
+    titulo: 'Uniforme de fútbol sublimado completo',
+    prenda: 'uniformes',
+    tecnica: 'sublimacion',
+    sector: 'gimnasios',
+    detalleTecnico: 'Sublimación total · poliéster deportivo',
+    reto:
+      'Camiseta y short debían compartir un diseño continuo y conservar intensidad de color. Se coordinó la impresión con los moldes antes del corte para alinear gráficos, dorsales y paneles en todas las tallas.',
+    imagen: 'galeria/uniforme-futbol-sublimado.jpg',
+    esImagenReferencial: true,
+  },
+  {
+    id: 'jersey-ciclismo-sublimado',
+    titulo: 'Jersey técnico con degradado sublimado',
+    prenda: 'camisetas',
+    tecnica: 'sublimacion',
+    sector: 'gimnasios',
+    detalleTecnico: 'Sublimación integral · tejido técnico',
+    reto:
+      'El degradado debía atravesar distintos paneles sin saltos visibles. La impresión se adaptó al patronaje para que el color se integrara a la fibra y las uniones conservaran continuidad.',
+    imagen: 'galeria/jersey-ciclismo-sublimado.jpg',
+    esImagenReferencial: true,
+  },
+  {
+    id: 'confeccion-camisa-industrial',
+    titulo: 'Confección de camisa para trabajo',
+    prenda: 'camisas',
+    tecnica: 'confeccion',
+    sector: 'construccion',
+    detalleTecnico: 'Patronaje, corte y costura reforzada',
+    reto:
+      'Se desarrolló una camisa resistente para jornadas de trabajo, cuidando movilidad, bolsillos funcionales y costuras de refuerzo. La pieza se construyó desde la tela y quedó lista para personalizar.',
+    imagen: 'galeria/confeccion-camisa-industrial.jpg',
+    esImagenReferencial: true,
+  },
+  {
+    id: 'confeccion-uniforme-hosteleria',
+    titulo: 'Uniforme de hostelería confeccionado a medida',
+    prenda: 'uniformes',
+    tecnica: 'confeccion',
+    sector: 'restaurantes',
+    detalleTecnico: 'Desarrollo de molde · acabados reforzados',
+    reto:
+      'La camisa y el mandil se diseñaron como un conjunto funcional y coherente. Se definieron telas, medidas, bolsillos y pespuntes para combinar una presentación cuidada con resistencia al uso diario.',
+    imagen: 'galeria/confeccion-uniforme-hosteleria.jpg',
+    esImagenReferencial: true,
+  },
   {
     id: 'gorra-construccion-3d',
     titulo: 'Gorra trucker con logo en relieve',

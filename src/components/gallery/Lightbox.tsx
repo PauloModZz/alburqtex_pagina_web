@@ -107,10 +107,14 @@ export default function Lightbox({ piece, onClose, onPrev, onNext }: LightboxPro
           </p>
           <h3 className="text-lg font-bold text-black/90 mb-2">{piece.titulo}</h3>
           <p className="text-sm text-black/60 leading-relaxed mb-3">{piece.reto}</p>
-          <p className="text-xs text-black/40">
-            ≈ {piece.puntadasAprox.toLocaleString('es-EC')} puntadas · {piece.coloresHilo} color
-            {piece.coloresHilo === 1 ? '' : 'es'} de hilo
-          </p>
+          {piece.detalleTecnico ? (
+            <p className="text-xs text-black/40">{piece.detalleTecnico}</p>
+          ) : piece.puntadasAprox !== undefined && piece.coloresHilo !== undefined ? (
+            <p className="text-xs text-black/40">
+              ≈ {piece.puntadasAprox.toLocaleString('es-EC')} puntadas · {piece.coloresHilo} color
+              {piece.coloresHilo === 1 ? '' : 'es'} de hilo
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

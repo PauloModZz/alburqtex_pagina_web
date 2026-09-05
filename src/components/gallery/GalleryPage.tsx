@@ -70,9 +70,9 @@ export default function GalleryPage() {
   const [filtersOpen, setFiltersOpen] = useState(activeFilterCount > 0);
 
   useSeo({
-    title: 'Galería de bordados',
+    title: 'Galería de trabajos textiles',
     description:
-      'Muestras visuales de bordado en gorras, polos, camisas, chompas, mandiles, toallas y mochilas — filtra por prenda, técnica o sector.',
+      'Muestras de bordado, estampado, sublimación y confección textil en prendas y uniformes — filtra por prenda, técnica o sector.',
     path: '/galeria',
   });
 
@@ -93,7 +93,7 @@ export default function GalleryPage() {
       ? {
           '@context': 'https://schema.org',
           '@type': 'ImageGallery',
-          name: 'Galería de bordados — Alburqtex',
+          name: 'Galería de trabajos textiles — Alburqtex',
           image: filtered.map((p) => ({
             '@type': 'ImageObject',
             name: p.titulo,
@@ -118,8 +118,8 @@ export default function GalleryPage() {
     <div className="min-h-screen w-full" style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}>
       <PageHeader
         eyebrow="Portafolio"
-        title="Galería de bordados"
-        description="Muestras visuales de acabados, puntadas y materiales. Filtra por prenda, técnica o sector para imaginar cómo puede verse tu proyecto."
+        title="Galería de trabajos"
+        description="Bordado, estampado, sublimación y confección textil en prendas, uniformes y accesorios. Filtra por técnica, prenda o sector para encontrar una referencia para tu proyecto."
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
@@ -220,7 +220,7 @@ export default function GalleryPage() {
           </div>
         )}
 
-        {/* Macro de puntada */}
+        {/* Detalle de acabado */}
         <section className="mt-16">
           <span className="text-xs font-semibold uppercase tracking-widest block mb-3" style={{ color: GOLD, letterSpacing: '0.14em' }}>
             {MACRO_SHOT.titulo}
@@ -239,7 +239,7 @@ export default function GalleryPage() {
         {/* Antes / después */}
         <section className="mt-16 max-w-3xl">
           <span className="text-xs font-semibold uppercase tracking-widest block mb-3" style={{ color: GOLD, letterSpacing: '0.14em' }}>
-            Del logo al bordado
+            Del diseño a la prenda
           </span>
           <h2 className="text-lg font-bold text-black/90 mb-4">Así se ve el logo original junto al resultado final</h2>
           <BeforeAfterSlider
@@ -256,8 +256,8 @@ export default function GalleryPage() {
             className="rounded-2xl border p-5 bg-white hover:shadow-md transition-shadow"
             style={{ borderColor: 'rgba(0,0,0,0.07)' }}
           >
-            <p className="text-sm font-semibold text-black/85 mb-1">¿Tu tela aguanta bordado?</p>
-            <p className="text-xs text-black/50">Revisa la comparativa de tejidos en nuestra guía de tallas.</p>
+            <p className="text-sm font-semibold text-black/85 mb-1">¿Qué tela conviene para tu proyecto?</p>
+            <p className="text-xs text-black/50">Compara tejidos para bordar, estampar, sublimar o confeccionar.</p>
           </Link>
           <Link
             to="/preguntas-frecuentes"
@@ -273,7 +273,7 @@ export default function GalleryPage() {
           className="mt-6 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-5 justify-between border"
           style={{ borderColor: 'rgba(0,0,0,0.08)', backgroundColor: 'rgba(201,151,63,0.06)' }}
         >
-          <p className="text-sm font-semibold text-black/85">¿Quieres algo así? Cotiza tu bordado.</p>
+          <p className="text-sm font-semibold text-black/85">¿Quieres algo así? Cuéntanos tu proyecto.</p>
           <a
             href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hola, vi la galería de trabajos y quiero cotizar algo parecido.')}`}
             target="_blank"
@@ -281,7 +281,7 @@ export default function GalleryPage() {
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold uppercase tracking-wide text-white shrink-0"
             style={{ backgroundColor: '#141414' }}
           >
-            Cotiza tu bordado
+            Cotiza tu proyecto
             <ArrowRight size={16} strokeWidth={2.25} />
           </a>
         </div>
