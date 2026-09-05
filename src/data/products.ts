@@ -1,5 +1,5 @@
 import poloBordado from '../assets/products/hero-v2/bordado.webp';
-import camisetaEstampada from '../assets/products/hero-v2/estampado-street.webp';
+import camisetaEstampada from '../assets/products/hero-v2/estampado-oversize-alburqtex.png';
 import camisetaSublimada from '../assets/products/hero-v2/sublimado.webp';
 
 // Enlace de contacto tomado de la hoja CONFIG del inventario (INVENTARIO.xlsx).
@@ -41,12 +41,12 @@ export const PRODUCTS: ShowcaseProduct[] = [
   },
   {
     sku: 'EST-001',
-    name: 'Camiseta Estampada Grande',
+    name: 'Camiseta Oversize Estampada',
     category: 'Camisetas',
-    material: '100% algodón peinado',
+    material: 'Algodón pesado de alto gramaje',
     sizes: 'S — M — L — XL — XXL',
     price: 12,
-    tagline: 'Estampado grande de alto impacto en el pecho. Ideal para lanzamientos de marca y streetwear.',
+    tagline: 'Corte oversize, mangas amplias y cuello grueso. Estampado urbano Alburqtex de gran formato en la espalda.',
     ghostWord: 'ESTAMPADO',
     src: camisetaEstampada,
     bg: '#6BBF7A',
