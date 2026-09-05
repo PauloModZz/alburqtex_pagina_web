@@ -43,7 +43,7 @@ export default function CommentsSection({ onRequireAuth }: CommentsSectionProps)
       return;
     }
     if (file.size > MAX_PHOTO_BYTES) {
-      setError('La foto no puede pesar más de 5MB.');
+      setError('La foto no puede pesar más de 10 MB.');
       return;
     }
     setError(null);

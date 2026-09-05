@@ -21,11 +21,10 @@ no aparecen hasta que haya comentarios reales aprobados).
 ## 2. Importante — fortalece la página pero no rompe nada mientras falte
 
 - **Fotos reales de trabajos terminados**
-  Ver `imagenes-pendientes.md` — 14 fotos, con nombre de archivo exacto y
-  qué debe mostrar cada una. La más importante de todas es la de "macro de
-  puntada" (primer plano bien cerca de una puntada), es la que más
-  diferencia a un taller bueno en la percepción de alguien que nunca te ha
-  visto trabajar.
+  La galería ya cuenta con imágenes referenciales optimizadas. Conviene
+  reemplazarlas progresivamente por fotografías propias manteniendo los
+  mismos nombres en `public/galeria/`; la interfaz identifica cada muestra
+  referencial hasta que eso ocurra.
 
 - **Testimonios reales**
   No hace falta tocar ningún archivo — en cuanto apruebes un comentario

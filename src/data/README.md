@@ -39,10 +39,9 @@ publicado si ya lo compartiste en algún lado.
 ## Cómo agregar un trabajo a la galería
 
 En `galeria.ts`, agrega un objeto al array `GALLERY_PIECES` con el mismo
-formato que los que ya existen. El campo `fotoReal` debe quedar en `false`
-hasta que subas la foto real con el nombre exacto indicado en
-`imagenPendienteNombre` (ver `imagenes-pendientes.md` en la raíz del
-proyecto) — ahí sí, cambia `fotoReal` a `true`.
+formato que los que ya existen. Usa el campo `imagen` para la ruta pública y
+mantén `esImagenReferencial: true` hasta reemplazarla por una fotografía
+propia del taller.
 
 ## Cómo agregar un artículo al blog
 

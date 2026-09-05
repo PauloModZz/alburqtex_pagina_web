@@ -86,13 +86,6 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
   const activeWordRef = useRef<HTMLSpanElement>(null);
   const [ghostScaleX, setGhostScaleX] = useState(1);
 
-  useEffect(() => {
-    PRODUCTS.forEach((p) => {
-      const img = new Image();
-      img.src = p.src;
-    });
-  }, []);
-
   // Mide el ancho real (renderizado) de la palabra activa contra "BORDADO" y
   // calcula cuánto hay que comprimirla en X para que ocupe exactamente el
   // mismo ancho — con el mismo tamaño de fuente, así que el alto no cambia.
@@ -191,6 +184,9 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
                 <img
                   src={product.src}
                   alt={product.name}
+                  loading={role === 'center' ? 'eager' : 'lazy'}
+                  fetchPriority={role === 'center' ? 'high' : 'auto'}
+                  decoding="async"
                   draggable={false}
                   style={{
                     width: '100%',

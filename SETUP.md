@@ -3,8 +3,7 @@
 Este proyecto tiene dos partes:
 
 1. **La página pública** (hero, catálogo, nosotros, ubicación, legal): ya funciona
-   completa, sin configuración adicional. Puedes correr `npm run dev` o el
-   acceso directo `Abrir pagina web.bat` y funciona tal cual.
+   completa, sin configuración adicional. Puedes iniciarla con `npm run dev`.
 2. **Cuentas de usuario y pedidos** (registro, login, "Agregar al pedido", "Mi
    cuenta"): necesitan que conectes un proyecto gratuito de
    [Firebase](https://firebase.google.com) (autenticación + base de datos).
