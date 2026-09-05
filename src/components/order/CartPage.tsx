@@ -7,6 +7,8 @@ import { sizeLabel } from '../../lib/format';
 import { DEFAULT_COUNTRY, toE164, type CountryCode } from '../../lib/phone';
 import PhoneInput from '../PhoneInput';
 import SiteNav from '../layout/SiteNav';
+import { useLanguage } from '../../context/LanguageContext';
+import { catalogTextEn } from '../../data/en';
 
 interface CartPageProps {
   onBack: () => void;
@@ -15,6 +17,7 @@ interface CartPageProps {
 }
 
 export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartPageProps) {
+  const { isEnglish } = useLanguage();
   const { user } = useAuth();
   const { items, removeItem, updateQuantity, submitOrder } = useCart();
   const [orderNotes, setOrderNotes] = useState('');
@@ -34,7 +37,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
     }
     const e164Phone = toE164(contactPhone, contactPhoneCountry);
     if (!e164Phone) {
-      setError('Ingresa un número de contacto válido para que podamos escribirte.');
+      setError(isEnglish ? 'Enter a valid contact number so we can reach you.' : 'Ingresa un número de contacto válido para que podamos escribirte.');
       return;
     }
     setSubmitting(true);
@@ -84,19 +87,16 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
             style={{ fontFamily: "'Anton', sans-serif", fontSize: '32px', textTransform: 'uppercase', color: '#141414' }}
             className="mb-3"
           >
-            ¡Pedido enviado!
+            {isEnglish ? 'Order submitted!' : '¡Pedido enviado!'}
           </h1>
           <p className="text-sm text-black/60 mb-4 leading-relaxed">
-            Registramos tu pedido. Para confirmarlo y comenzar a producirlo, escríbenos por
-            WhatsApp con el botón de abajo — así te confirmamos el pago y arrancamos.
+            {isEnglish ? 'We received your order. Message us on WhatsApp with the button below to confirm payment and begin production.' : 'Registramos tu pedido. Para confirmarlo y comenzar a producirlo, escríbenos por WhatsApp con el botón de abajo — así te confirmamos el pago y arrancamos.'}
           </p>
           <div
             className="text-left rounded-2xl p-4 mb-8 text-xs text-black/60 leading-relaxed"
             style={{ backgroundColor: 'rgba(201,151,63,0.08)' }}
           >
-            <strong className="text-black/80">Formas de pago:</strong> transferencia, depósito o
-            efectivo (efectivo solo en el local). Todo se coordina por WhatsApp. Para iniciar la
-            producción de tu pedido personalizado se requiere un <strong>abono del 50%</strong>.
+            {isEnglish ? <><strong className="text-black/80">Payment methods:</strong> bank transfer, deposit or cash at the workshop. A <strong>50% deposit</strong> is required to begin personalized production.</> : <><strong className="text-black/80">Formas de pago:</strong> transferencia, depósito o efectivo (efectivo solo en el local). Todo se coordina por WhatsApp. Para iniciar la producción de tu pedido personalizado se requiere un <strong>abono del 50%</strong>.</>}
           </div>
           <div className="flex flex-col gap-3">
             <a
@@ -106,7 +106,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
               className="rounded-full py-3 text-sm font-semibold uppercase tracking-wide text-white"
               style={{ backgroundColor: '#141414' }}
             >
-              Avisar por WhatsApp
+              {isEnglish ? 'Continue on WhatsApp' : 'Avisar por WhatsApp'}
             </a>
             <button
               type="button"
@@ -114,7 +114,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
               className="rounded-full py-3 text-sm font-semibold uppercase tracking-wide border"
               style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414' }}
             >
-              Seguir viendo el catálogo
+              {isEnglish ? 'Continue browsing the catalog' : 'Seguir viendo el catálogo'}
             </button>
           </div>
         </div>
@@ -133,12 +133,12 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
             className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/60 hover:text-black transition-colors mb-4"
           >
             <ArrowLeft size={16} strokeWidth={2.25} />
-            Volver
+            {isEnglish ? 'Back' : 'Volver'}
           </button>
           <h1
             style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(28px, 5vw, 44px)', textTransform: 'uppercase', color: '#141414' }}
           >
-            Tu pedido
+            {isEnglish ? 'Your order' : 'Tu pedido'}
           </h1>
         </div>
       </header>
@@ -146,14 +146,14 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
       <main className="max-w-3xl mx-auto px-4 sm:px-8 pt-6 pb-24">
         {items.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-sm text-black/50 mb-6">Todavía no agregaste productos a tu pedido.</p>
+            <p className="text-sm text-black/50 mb-6">{isEnglish ? 'You have not added any products yet.' : 'Todavía no agregaste productos a tu pedido.'}</p>
             <button
               type="button"
               onClick={onOpenCatalog}
               className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white"
               style={{ backgroundColor: '#141414' }}
             >
-              Ver catálogo
+              {isEnglish ? 'View catalog' : 'Ver catálogo'}
               <ArrowRight size={16} strokeWidth={2.25} />
             </button>
           </div>
@@ -166,16 +166,16 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
                   className="flex gap-4 bg-white rounded-2xl border p-4"
                   style={{ borderColor: 'rgba(0,0,0,0.06)' }}
                 >
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-contain shrink-0" />
+                  <img src={item.image} alt={isEnglish ? catalogTextEn(item.name) : item.name} className="w-16 h-16 object-contain shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-black/90">{item.name}</p>
+                    <p className="text-sm font-semibold text-black/90">{isEnglish ? catalogTextEn(item.name) : item.name}</p>
                     <p className="text-xs text-black/45 mt-0.5">
                       {sizeLabel(item.size)}
-                      {item.hasName && ` · Nombre: "${item.nameText}"`}
+                      {item.hasName && ` · ${isEnglish ? 'Name' : 'Nombre'}: "${item.nameText}"`}
                     </p>
                     {item.hasLogo && (
                       <p className="text-xs text-black/45 mt-0.5 flex items-center gap-1">
-                        <ImagePlus size={12} strokeWidth={2} /> Quiere logo personalizado
+                        <ImagePlus size={12} strokeWidth={2} /> {isEnglish ? 'Custom logo requested' : 'Quiere logo personalizado'}
                       </p>
                     )}
                     {item.notes && <p className="text-xs text-black/40 mt-0.5 italic">"{item.notes}"</p>}
@@ -204,7 +204,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
                       type="button"
                       onClick={() => removeItem(item.id)}
                       className="text-black/30 hover:text-red-600 transition-colors"
-                      aria-label="Quitar"
+                      aria-label={isEnglish ? 'Remove' : 'Quitar'}
                     >
                       <Trash2 size={16} strokeWidth={2} />
                     </button>
@@ -215,7 +215,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
             </div>
 
             <label className="text-xs font-semibold uppercase tracking-widest text-black/50 mb-2 block">
-              Número de contacto
+              {isEnglish ? 'Contact number' : 'Número de contacto'}
             </label>
             <div className="mb-4">
               <PhoneInput
@@ -223,7 +223,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
                 onCountryChange={setContactPhoneCountry}
                 value={contactPhone}
                 onChange={setContactPhone}
-                placeholder="¿A qué número te escribimos por este pedido?"
+                placeholder={isEnglish ? 'Which number should we contact about this order?' : '¿A qué número te escribimos por este pedido?'}
               />
             </div>
 
@@ -231,7 +231,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
               value={orderNotes}
               onChange={(e) => setOrderNotes(e.target.value)}
               rows={3}
-              placeholder="Notas generales para todo el pedido (opcional)"
+              placeholder={isEnglish ? 'General notes for the order (optional)' : 'Notas generales para todo el pedido (opcional)'}
               className="w-full text-sm rounded-xl border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors resize-none mb-6"
             />
 
@@ -241,14 +241,12 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
             >
               <Info size={16} strokeWidth={2} className="shrink-0 mt-0.5" style={{ color: '#C9973F' }} />
               <p>
-                Manejamos <strong>transferencia, depósito o efectivo</strong> (efectivo solo en el
-                local) — todo se coordina por WhatsApp. Para comenzar tu pedido personalizado se
-                requiere un <strong>abono del 50%</strong>.
+                {isEnglish ? <>We accept <strong>bank transfer, deposit or cash</strong> at the workshop. Payment is coordinated through WhatsApp and a <strong>50% deposit</strong> starts personalized production.</> : <>Manejamos <strong>transferencia, depósito o efectivo</strong> (efectivo solo en el local) — todo se coordina por WhatsApp. Para comenzar tu pedido personalizado se requiere un <strong>abono del 50%</strong>.</>}
               </p>
             </div>
 
             <div className="flex items-center justify-between mb-2 text-sm text-black/50">
-              <span>Estimado (precio final se confirma en la cotización)</span>
+              <span>{isEnglish ? 'Estimate (final price confirmed in the quote)' : 'Estimado (precio final se confirma en la cotización)'}</span>
               <span className="font-bold text-black/90 text-base">${total.toFixed(2)}</span>
             </div>
 
@@ -261,7 +259,7 @@ export default function CartPage({ onBack, onRequireAuth, onOpenCatalog }: CartP
               className="w-full rounded-full py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
               style={{ backgroundColor: '#141414' }}
             >
-              {submitting ? 'Enviando...' : user ? 'Finalizar pedido' : 'Inicia sesión para finalizar'}
+              {submitting ? (isEnglish ? 'Submitting...' : 'Enviando...') : user ? (isEnglish ? 'Submit order' : 'Finalizar pedido') : (isEnglish ? 'Sign in to finish' : 'Inicia sesión para finalizar')}
             </button>
           </>
         )}

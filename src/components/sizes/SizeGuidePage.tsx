@@ -8,6 +8,7 @@ import SizeDiagram from './SizeDiagram';
 import { SIZE_GUIDES, cmToInches, type GarmentSizeGuide } from '../../data/tallas';
 import { TEJIDOS, RECEPTIVIDAD_LABEL, UBICACIONES_BORDADO } from '../../data/tejidos';
 import { useSeo, useJsonLd } from '../../lib/seo';
+import { useLanguage } from '../../context/LanguageContext';
 
 const GOLD = '#C9973F';
 
@@ -18,7 +19,10 @@ const RECEPTIVIDAD_COLOR: Record<string, string> = {
   'no-recomendado': '#B3261E',
 };
 
-function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm' | 'in' }) {
+const GARMENT_EN: Record<string, string> = { polo: 'Piqué polo shirt', camiseta: 'T-shirt', camisa: 'Corporate shirt', chompa: 'Jacket', 'buzo-capucha': 'Hoodie', gorra: 'Fitted cap', mandil: 'Apron', chaleco: 'Vest', 'uniforme-escolar': 'School polo shirt' };
+const FIELD_EN: Record<string, string> = { pecho: 'Chest width', largo: 'Total length', manga: 'Sleeve length', hombro: 'Shoulder to shoulder', contorno: 'Head circumference', ancho: 'Maximum width' };
+
+function GarmentBlock({ guide, unidad, isEnglish }: { guide: GarmentSizeGuide; unidad: 'cm' | 'in'; isEnglish: boolean }) {
   const defaultIndex = guide.filas.findIndex((row) => row.talla === 'M');
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex >= 0 ? defaultIndex : Math.floor(guide.filas.length / 2));
   const selectedRow = guide.filas[selectedIndex] ?? guide.filas[0];
@@ -29,9 +33,9 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
     <section id={guide.id} className="scroll-mt-28 py-12 border-b" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
       <div className="grid lg:grid-cols-[1fr_320px] gap-8">
         <div>
-          <h2 className="text-xl font-bold text-black/90 mb-1">{guide.nombre}</h2>
+          <h2 className="text-xl font-bold text-black/90 mb-1">{isEnglish ? GARMENT_EN[guide.id] ?? guide.nombre : guide.nombre}</h2>
           <p className="text-xs uppercase tracking-widest font-semibold mb-1" style={{ color: GOLD }}>
-            Calce {guide.calce}
+            {isEnglish ? `Fit ${{ entallado: 'fitted', regular: 'regular', holgado: 'relaxed' }[guide.calce]}` : `Calce ${guide.calce}`}
           </p>
           <p className="text-sm text-black/55 mb-6">{guide.calceNota}</p>
 
@@ -40,10 +44,10 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-                  <th className="text-left py-2 pr-4 font-semibold text-black/70">Talla</th>
+                  <th className="text-left py-2 pr-4 font-semibold text-black/70">{isEnglish ? 'Size' : 'Talla'}</th>
                   {guide.campos.map((c) => (
                     <th key={c.key} className="text-left py-2 pr-4 font-semibold text-black/70">
-                      {c.label} ({unitLabel})
+                      {isEnglish ? FIELD_EN[c.key] ?? c.label : c.label} ({unitLabel})
                     </th>
                   ))}
                 </tr>
@@ -65,7 +69,7 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
                         className="rounded-full px-2 py-1 font-bold transition-colors"
                         style={index === selectedIndex ? { backgroundColor: GOLD, color: '#141414' } : undefined}
                         aria-pressed={index === selectedIndex}
-                        aria-label={`Ver medidas de la talla ${row.talla} en el diagrama`}
+                        aria-label={isEnglish ? `Show size ${row.talla} measurements in the diagram` : `Ver medidas de la talla ${row.talla} en el diagrama`}
                       >
                         {row.talla}
                       </button>
@@ -99,7 +103,7 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
                 <ul className="text-xs text-black/60 space-y-1">
                   {guide.campos.map((c) => (
                     <li key={c.key} className="flex justify-between">
-                      <span>{c.label}</span>
+                      <span>{isEnglish ? FIELD_EN[c.key] ?? c.label : c.label}</span>
                       <span className="font-semibold text-black/75">
                         {fmt(row.medidasCm[c.key] ?? 0)} {unitLabel}
                       </span>
@@ -112,7 +116,7 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
 
           {guide.tallasNino && (
             <div className="mt-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3">Tallas de niño</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3">{isEnglish ? 'Youth sizes' : 'Tallas de niño'}</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {guide.tallasNino.map((row) => (
                   <div key={row.talla} className="rounded-xl border p-3" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
@@ -120,7 +124,7 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
                     <ul className="text-[11px] text-black/55 space-y-0.5">
                       {guide.campos.map((c) => (
                         <li key={c.key}>
-                          {c.label}: {fmt(row.medidasCm[c.key] ?? 0)} {unitLabel}
+                          {isEnglish ? FIELD_EN[c.key] ?? c.label : c.label}: {fmt(row.medidasCm[c.key] ?? 0)} {unitLabel}
                         </li>
                       ))}
                     </ul>
@@ -135,13 +139,13 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
 
         <div>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-black/45">Talla US mostrada</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-black/45">{isEnglish ? 'US size shown' : 'Talla US mostrada'}</span>
             <select
               value={selectedIndex}
               onChange={(event) => setSelectedIndex(Number(event.target.value))}
               className="rounded-full border bg-white px-3 py-1.5 text-xs font-bold text-black/80 outline-none focus:ring-2"
               style={{ borderColor: 'rgba(0,0,0,0.12)' }}
-              aria-label={`Seleccionar talla para ${guide.nombre}`}
+              aria-label={isEnglish ? `Select size for ${GARMENT_EN[guide.id] ?? guide.nombre}` : `Seleccionar talla para ${guide.nombre}`}
             >
               {guide.filas.map((row, index) => (
                 <option key={row.talla} value={index}>{row.talla}</option>
@@ -150,13 +154,13 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
           </div>
           <SizeDiagram
             image={guide.imagen}
-            alt={`Diagrama de medición para ${guide.nombre}`}
+            alt={isEnglish ? `Measurement diagram for ${GARMENT_EN[guide.id] ?? guide.nombre}` : `Diagrama de medición para ${guide.nombre}`}
             campos={guide.campos}
             valores={selectedRow.medidasCm}
             unidad={unidad}
           />
           <p className="text-[11px] text-black/35 text-center mt-2">
-            Medidas de prenda en plano · talla US {selectedRow.talla} · ilustración no a escala.
+            {isEnglish ? `Flat garment measurements · US size ${selectedRow.talla} · illustration not to scale.` : `Medidas de prenda en plano · talla US ${selectedRow.talla} · ilustración no a escala.`}
           </p>
         </div>
       </div>
@@ -169,6 +173,7 @@ function GarmentBlock({ guide, unidad }: { guide: GarmentSizeGuide; unidad: 'cm'
 const SECTION_IDS = [...SIZE_GUIDES.map((g) => g.id), 'ubicaciones', 'como-medirte', 'tejidos'];
 
 export default function SizeGuidePage() {
+  const { isEnglish, localizePath } = useLanguage();
   const [unidad, setUnidad] = useState<'cm' | 'in'>('cm');
   const [activeId, setActiveId] = useState<string>(SECTION_IDS[0]);
 
@@ -194,9 +199,8 @@ export default function SizeGuidePage() {
   }, []);
 
   useSeo({
-    title: 'Guía de tallas y tipos de prenda',
-    description:
-      'Tabla de tallas en centímetros y pulgadas para polos, camisetas, camisas, chompas, gorras, mandiles y más, más guía de tejidos y ubicaciones de bordado.',
+    title: isEnglish ? 'Apparel size and fabric guide' : 'Guía de tallas y tipos de prenda',
+    description: isEnglish ? 'Size charts in centimeters and inches for shirts, polos, jackets, caps, aprons and more, plus fabric and personalization guidance.' : 'Tabla de tallas en centímetros y pulgadas para polos, camisetas, camisas, chompas, gorras, mandiles y más, más guía de tejidos y ubicaciones de bordado.',
     path: '/guia-de-tallas',
   });
 
@@ -215,9 +219,9 @@ export default function SizeGuidePage() {
   return (
     <div className="min-h-screen w-full" style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}>
       <PageHeader
-        eyebrow="Antes de pedir"
-        title="Guía de tallas"
-        description="Tablas de referencia por tipo de prenda, cómo medirte bien, qué tejido conviene para bordar y dónde va el bordado en cada prenda."
+        eyebrow={isEnglish ? 'Before ordering' : 'Antes de pedir'}
+        title={isEnglish ? 'Size guide' : 'Guía de tallas'}
+        description={isEnglish ? 'Reference charts by garment type, how to measure, suitable fabrics and personalization placement.' : 'Tablas de referencia por tipo de prenda, cómo medirte bien, qué tejido conviene para bordar y dónde va el bordado en cada prenda.'}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14 flex justify-end">
@@ -230,7 +234,7 @@ export default function SizeGuidePage() {
               className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2 transition-colors"
               style={unidad === u ? { backgroundColor: '#141414', color: '#fff' } : { color: '#141414' }}
             >
-              {u === 'cm' ? 'Centímetros' : 'Pulgadas'}
+              {u === 'cm' ? (isEnglish ? 'Centimeters' : 'Centímetros') : (isEnglish ? 'Inches' : 'Pulgadas')}
             </button>
           ))}
         </div>
@@ -288,7 +292,7 @@ export default function SizeGuidePage() {
           </div>
 
           {SIZE_GUIDES.map((guide) => (
-            <GarmentBlock key={guide.id} guide={guide} unidad={unidad} />
+            <GarmentBlock key={guide.id} guide={guide} unidad={unidad} isEnglish={isEnglish} />
           ))}
 
           {/* Ubicaciones */}
@@ -316,7 +320,7 @@ export default function SizeGuidePage() {
             </p>
             <div className="grid sm:grid-cols-2 gap-3 mt-6">
               <Link
-                to="/blog/guia-ubicaciones-bordado"
+                to={localizePath('/blog/guia-ubicaciones-bordado')}
                 className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
                 style={{ borderColor: 'rgba(0,0,0,0.07)' }}
               >
@@ -324,7 +328,7 @@ export default function SizeGuidePage() {
                 <p className="text-xs text-black/50 mt-1">Qué comunica cada zona y por qué elegirla.</p>
               </Link>
               <Link
-                to="/blog/bordado-en-gorras"
+                to={localizePath('/blog/bordado-en-gorras')}
                 className="rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
                 style={{ borderColor: 'rgba(0,0,0,0.07)' }}
               >
@@ -393,7 +397,7 @@ export default function SizeGuidePage() {
               ))}
             </div>
             <Link
-              to="/blog/bordado-vs-estampado"
+              to={localizePath('/blog/bordado-vs-estampado')}
               className="group mt-4 inline-flex items-center gap-2 text-sm font-semibold text-black/70 hover:text-black transition-colors"
             >
               ¿Bordado o estampado? Lee la comparativa completa
@@ -404,7 +408,7 @@ export default function SizeGuidePage() {
       </div>
 
       <PageFooter />
-      <WhatsAppFloatButton message="Hola, tengo una duda sobre tallas o dónde ubicar el bordado en mi prenda." />
+      <WhatsAppFloatButton message={isEnglish ? 'Hello, I have a question about sizing or personalization placement.' : 'Hola, tengo una duda sobre tallas o dónde ubicar el bordado en mi prenda.'} />
     </div>
   );
 }

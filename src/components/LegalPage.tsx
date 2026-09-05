@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { LEGAL_LAST_UPDATED, LEGAL_SECTIONS } from '../data/legal';
 import { WHATSAPP_LINK } from '../data/products';
+import { useLanguage } from '../context/LanguageContext';
+import SiteNav from './layout/SiteNav';
 
 const GOLD = '#C9973F';
 
@@ -13,6 +15,7 @@ interface LegalPageProps {
 const SECTION_IDS = LEGAL_SECTIONS.map((section) => section.id);
 
 export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
+  const { isEnglish } = useLanguage();
   const [activeId, setActiveId] = useState<string>(SECTION_IDS[0]);
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
       className="min-h-screen w-full"
       style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}
     >
+      <SiteNav />
       <header className="border-b" style={{ backgroundColor: '#FAF7F2', borderColor: 'rgba(0,0,0,0.08)' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-5 pb-4">
           <button
@@ -56,7 +60,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
             className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors mb-4"
           >
             <ArrowLeft size={16} strokeWidth={2.25} />
-            Volver
+            {isEnglish ? 'Back' : 'Volver'}
           </button>
           <h1
             style={{
@@ -70,7 +74,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
           >
             Legal
           </h1>
-          <p className="text-xs text-black/45 mt-2">Última actualización: {LEGAL_LAST_UPDATED}</p>
+          <p className="text-xs text-black/45 mt-2">{isEnglish ? 'Last updated' : 'Última actualización'}: {LEGAL_LAST_UPDATED}</p>
         </div>
       </header>
 
@@ -78,7 +82,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
         {/* Tabla de contenidos */}
         <nav className="hidden lg:block sticky top-28 self-start">
           <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3">
-            Contenido
+            {isEnglish ? 'Contents' : 'Contenido'}
           </p>
           <ul className="space-y-2">
             {LEGAL_SECTIONS.map((section) => (
@@ -102,9 +106,9 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
         {/* Contenido */}
         <div className="max-w-2xl">
           <p className="text-sm text-black/55 leading-relaxed mb-12">
-            Este documento reúne nuestros Términos y Condiciones, Política de Privacidad, Política de
+            {isEnglish ? 'The Spanish text below is the governing version of our Terms and Conditions, Privacy Policy, Cookie Policy, and Shipping and Returns Policy under Ecuadorian law. Contact us if you need help understanding any section.' : <>Este documento reúne nuestros Términos y Condiciones, Política de Privacidad, Política de
             Cookies y Política de Envíos y Devoluciones en un solo lugar, conforme al marco legal
-            ecuatoriano de comercio electrónico y protección de datos.
+            ecuatoriano de comercio electrónico y protección de datos.</>}
           </p>
 
           <div className="space-y-12">
@@ -134,7 +138,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
             className="mt-14 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between border"
             style={{ borderColor: 'rgba(0,0,0,0.08)' }}
           >
-            <p className="text-sm text-black/60">¿Tienes dudas sobre estos términos o tu pedido?</p>
+            <p className="text-sm text-black/60">{isEnglish ? 'Questions about these terms or your order?' : '¿Tienes dudas sobre estos términos o tu pedido?'}</p>
             <a
               href={WHATSAPP_LINK}
               target="_blank"
@@ -143,7 +147,7 @@ export default function LegalPage({ onBack, scrollToId }: LegalPageProps) {
               style={{ backgroundColor: '#141414' }}
             >
               <MessageCircle size={16} strokeWidth={2.25} />
-              Escríbenos por WhatsApp
+              {isEnglish ? 'Message us on WhatsApp' : 'Escríbenos por WhatsApp'}
             </a>
           </div>
         </div>

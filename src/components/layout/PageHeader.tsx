@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
 import SiteNav from './SiteNav';
+import { useLanguage } from '../../context/LanguageContext';
 
 const GOLD = '#C9973F';
 
@@ -15,6 +16,7 @@ interface PageHeaderProps {
 /** Encabezado compartido por las páginas nuevas — mismo patrón que ya usa LegalPage. */
 export default function PageHeader({ eyebrow, title, description, extra }: PageHeaderProps) {
   const navigate = useNavigate();
+  const { isEnglish, localizePath } = useLanguage();
 
   // Vuelve a la página anterior de verdad (guía de tallas, catálogo, un
   // artículo del blog...), no siempre al inicio. Si no hay una página
@@ -23,7 +25,7 @@ export default function PageHeader({ eyebrow, title, description, extra }: PageH
   const handleBack = () => {
     const idx = (window.history.state as { idx?: number } | null)?.idx;
     if (typeof idx === 'number' && idx > 0) navigate(-1);
-    else navigate('/');
+    else navigate(localizePath('/'));
   };
 
   return (
@@ -36,7 +38,7 @@ export default function PageHeader({ eyebrow, title, description, extra }: PageH
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors mb-4"
         >
           <ArrowLeft size={16} strokeWidth={2.25} />
-          Volver
+          {isEnglish ? 'Back' : 'Volver'}
         </button>
         <span
           className="text-xs font-semibold uppercase tracking-widest block mb-2"

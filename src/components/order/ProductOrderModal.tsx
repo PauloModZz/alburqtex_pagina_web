@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ImagePlus, Minus, Plus, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import type { CatalogProduct } from '../../data/catalog';
+import { useLanguage } from '../../context/LanguageContext';
+import { catalogTextEn } from '../../data/en';
 
 const GOLD = '#C9973F';
 
@@ -12,6 +14,7 @@ interface ProductOrderModalProps {
 }
 
 export default function ProductOrderModal({ product, onClose, onAdded }: ProductOrderModalProps) {
+  const { isEnglish } = useLanguage();
   const { addItem } = useCart();
   const sizes = product.sizes
     .split(',')
@@ -28,11 +31,11 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
 
   const handleSubmit = () => {
     if (!size) {
-      setError('Elige una talla.');
+      setError(isEnglish ? 'Choose a size.' : 'Elige una talla.');
       return;
     }
     if (hasName && !nameText.trim()) {
-      setError('Escribe el nombre que llevará la prenda.');
+      setError(isEnglish ? 'Enter the exact name for the garment.' : 'Escribe el nombre que llevará la prenda.');
       return;
     }
 
@@ -62,10 +65,10 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-4 p-5 border-b" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-          <img src={product.image} alt={product.name} className="w-16 h-16 object-contain shrink-0" />
+          <img src={product.image} alt={isEnglish ? catalogTextEn(product.name) : product.name} className="w-16 h-16 object-contain shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-black/90 leading-snug">{product.name}</p>
-            <p className="text-xs text-black/45 mt-0.5">{product.material}</p>
+            <p className="text-sm font-semibold text-black/90 leading-snug">{isEnglish ? catalogTextEn(product.name) : product.name}</p>
+            <p className="text-xs text-black/45 mt-0.5">{isEnglish ? catalogTextEn(product.material) : product.material}</p>
             <p className="text-sm font-bold mt-1">${product.price.toFixed(2)}</p>
           </div>
           <button type="button" onClick={onClose} className="text-black/40 hover:text-black transition-colors">
@@ -76,7 +79,7 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
         <div className="p-5 flex flex-col gap-4">
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest text-black/50 mb-2 block">
-              Talla
+              {isEnglish ? 'Size' : 'Talla'}
             </label>
             <div className="flex flex-wrap gap-2">
               {sizes.map((s) => (
@@ -99,7 +102,7 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
 
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest text-black/50 mb-2 block">
-              Cantidad
+              {isEnglish ? 'Quantity' : 'Cantidad'}
             </label>
             <div className="flex items-center gap-3">
               <button
@@ -129,14 +132,14 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
               onChange={(e) => setHasName(e.target.checked)}
               className="w-4 h-4 accent-[#141414]"
             />
-            ¿Lleva nombre bordado o estampado?
+            {isEnglish ? 'Add an embroidered or printed name?' : '¿Lleva nombre bordado o estampado?'}
           </label>
           {hasName && (
             <input
               type="text"
               value={nameText}
               onChange={(e) => setNameText(e.target.value)}
-              placeholder="Nombre exacto a personalizar"
+              placeholder={isEnglish ? 'Exact name to personalize' : 'Nombre exacto a personalizar'}
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-2.5 outline-none focus:border-black/30 transition-colors -mt-2"
             />
           )}
@@ -148,7 +151,7 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
               onChange={(e) => setHasLogo(e.target.checked)}
               className="w-4 h-4 accent-[#141414]"
             />
-            ¿Quieres logo personalizado?
+            {isEnglish ? 'Add a custom logo?' : '¿Quieres logo personalizado?'}
           </label>
           {hasLogo && (
             <div
@@ -157,21 +160,20 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
             >
               <ImagePlus size={16} strokeWidth={2} className="shrink-0 mt-0.5" style={{ color: GOLD }} />
               <span>
-                Anotado. Después de enviar tu pedido, coordina el archivo de tu logo con nosotros por
-                WhatsApp.
+                {isEnglish ? 'Noted. After submitting the order, send us your logo file through WhatsApp.' : 'Anotado. Después de enviar tu pedido, coordina el archivo de tu logo con nosotros por WhatsApp.'}
               </span>
             </div>
           )}
 
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest text-black/50 mb-2 block">
-              Descripción / notas (opcional)
+              {isEnglish ? 'Description / notes (optional)' : 'Descripción / notas (opcional)'}
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              placeholder="Color, ubicación del bordado, referencias, etc."
+              placeholder={isEnglish ? 'Color, logo placement, references, etc.' : 'Color, ubicación del bordado, referencias, etc.'}
               className="w-full text-sm rounded-xl border border-black/10 bg-white px-4 py-2.5 outline-none focus:border-black/30 transition-colors resize-none"
             />
           </div>
@@ -184,7 +186,7 @@ export default function ProductOrderModal({ product, onClose, onAdded }: Product
             className="w-full rounded-full py-3 text-sm font-semibold uppercase tracking-wide text-white transition-transform hover:scale-[1.02]"
             style={{ backgroundColor: GOLD }}
           >
-            Agregar al pedido
+            {isEnglish ? 'Add to order' : 'Agregar al pedido'}
           </button>
         </div>
       </div>

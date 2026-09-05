@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import SiteNav from './layout/SiteNav';
+import { useLanguage } from '../context/LanguageContext';
 
 const GRAIN_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#n)' opacity='0.08'/></svg>`;
 const GRAIN_DATA_URI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(GRAIN_SVG)}`;
@@ -76,6 +77,7 @@ interface HeroProps {
 }
 
 export default function Hero({ onOpenCatalog }: HeroProps) {
+  const { isEnglish } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -222,7 +224,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
               animation: `ghostFadeIn ${TRANSITION_MS}ms ${EASE}`,
             }}
           >
-            {active.ghostWord}
+            {isEnglish ? ({ BORDADO: 'EMBROIDERY', ESTAMPADO: 'PRINTING', SUBLIMADO: 'SUBLIMATION' }[active.ghostWord] ?? active.ghostWord) : active.ghostWord}
           </span>
         </div>
 
@@ -263,13 +265,15 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
             className="font-bold uppercase tracking-widest mb-2 sm:mb-3 text-base sm:text-[22px] text-white"
             style={{ opacity: 0.95, letterSpacing: '0.02em' }}
           >
-            Taller de personalización textil
+            {isEnglish ? 'Textile customization workshop' : 'Taller de personalización textil'}
           </p>
           <p
             className="hidden sm:block text-xs sm:text-sm text-white mb-4 sm:mb-5"
             style={{ opacity: 0.85, lineHeight: 1.6 }}
           >
-            Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti, para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.
+            {isEnglish
+              ? 'High-quality garment manufacturing, embroidery, printing and sublimation. Made in Guayaquil for individuals, institutions and companies, with craftsmanship you can trust.'
+              : 'Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti, para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.'}
           </p>
           <div className="flex gap-3">
             <button
@@ -317,7 +321,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
               textTransform: 'uppercase',
             }}
           >
-            Ver catálogo
+            {isEnglish ? 'View catalog' : 'Ver catálogo'}
           </span>
           <ArrowRight
             className="w-5 h-5 sm:w-8 sm:h-8 ml-2 transition-transform duration-200 group-hover:translate-x-1.5"

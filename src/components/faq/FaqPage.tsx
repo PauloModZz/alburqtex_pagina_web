@@ -8,20 +8,23 @@ import { FAQ_CATEGORIES, FAQ_ALL_ITEMS } from '../../data/faq';
 import { BLOG_POSTS_BY_SLUG } from '../../data/blog';
 import { WHATSAPP_LINK } from '../../data/products';
 import { useSeo, useJsonLd, SITE_URL } from '../../lib/seo';
+import { useLanguage } from '../../context/LanguageContext';
+import { BLOG_EN, FAQ_CATEGORY_EN, FAQ_EN } from '../../data/en';
 
 const RELATED_ARTICLE_SLUGS = ['que-archivo-necesito', 'que-es-el-ponchado', 'de-que-depende-el-precio'];
 
 const GOLD = '#C9973F';
 
 export default function FaqPage() {
+  const { isEnglish, localizePath } = useLanguage();
   const location = useLocation();
   const [search, setSearch] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useSeo({
-    title: 'Preguntas frecuentes',
+    title: isEnglish ? 'Frequently asked questions' : 'Preguntas frecuentes',
     description:
-      'Resolvemos las dudas más comunes sobre pedidos mínimos, archivos para bordar tu logo, tiempos de entrega, precios y garantías en Alburqtex.',
+      isEnglish ? 'Answers about minimum orders, logo files, garment manufacturing, embroidery, textile printing, lead times, pricing and guarantees.' : 'Resolvemos las dudas más comunes sobre pedidos mínimos, archivos para bordar tu logo, tiempos de entrega, precios y garantías en Alburqtex.',
     path: '/preguntas-frecuentes',
   });
 
@@ -30,8 +33,8 @@ export default function FaqPage() {
     '@type': 'FAQPage',
     mainEntity: FAQ_ALL_ITEMS.map((item) => ({
       '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      name: isEnglish ? FAQ_EN[item.id]?.question ?? item.question : item.question,
+      acceptedAnswer: { '@type': 'Answer', text: isEnglish ? FAQ_EN[item.id]?.answer ?? item.answer : item.answer },
     })),
   });
 
@@ -46,19 +49,24 @@ export default function FaqPage() {
     }
   }, [location.hash]);
 
+  const localizedCategories = useMemo(() => FAQ_CATEGORIES.map((cat) => ({
+    ...cat,
+    title: isEnglish ? FAQ_CATEGORY_EN[cat.id] ?? cat.title : cat.title,
+    items: cat.items.map((item) => isEnglish ? { ...item, ...FAQ_EN[item.id] } : item),
+  })), [isEnglish]);
   const query = search.trim().toLowerCase();
   const filteredCategories = useMemo(() => {
-    if (!query) return FAQ_CATEGORIES;
-    return FAQ_CATEGORIES.map((cat) => ({
+    if (!query) return localizedCategories;
+    return localizedCategories.map((cat) => ({
       ...cat,
       items: cat.items.filter(
         (item) => item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query),
       ),
     })).filter((cat) => cat.items.length > 0);
-  }, [query]);
+  }, [query, localizedCategories]);
 
   const copyLink = (id: string) => {
-    const url = `${SITE_URL}/preguntas-frecuentes#${id}`;
+    const url = `${SITE_URL}${localizePath('/preguntas-frecuentes')}#${id}`;
     navigator.clipboard?.writeText(url).then(() => {
       setCopiedId(id);
       setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 1800);
@@ -70,9 +78,9 @@ export default function FaqPage() {
   return (
     <div className="min-h-screen w-full" style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}>
       <PageHeader
-        eyebrow="Ayuda"
-        title="Preguntas frecuentes"
-        description="Todo lo que suelen preguntarnos antes de pedir un bordado — si no encuentras tu respuesta aquí, te contestamos directo por WhatsApp."
+        eyebrow={isEnglish ? 'Help' : 'Ayuda'}
+        title={isEnglish ? 'Frequently asked questions' : 'Preguntas frecuentes'}
+        description={isEnglish ? 'Clear answers before ordering custom apparel. If your question is not here, message us directly on WhatsApp.' : 'Todo lo que suelen preguntarnos antes de pedir un bordado — si no encuentras tu respuesta aquí, te contestamos directo por WhatsApp.'}
       />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
@@ -82,14 +90,14 @@ export default function FaqPage() {
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Busca por palabra clave (ej. archivo, mínimo, plazo...)"
-            aria-label="Buscar en preguntas frecuentes"
+            placeholder={isEnglish ? 'Search by keyword (file, minimum, deadline...)' : 'Busca por palabra clave (ej. archivo, mínimo, plazo...)'}
+            aria-label={isEnglish ? 'Search frequently asked questions' : 'Buscar en preguntas frecuentes'}
             className="w-full text-sm rounded-full border border-black/10 bg-white pl-10 pr-4 py-3 outline-none focus:border-black/30 transition-colors"
           />
         </div>
         {filteredCategories.length === 0 ? (
           <p className="text-sm text-black/45 text-center py-16">
-            No encontramos preguntas con "{search}". Prueba con otra palabra o escríbenos directo.
+            {isEnglish ? `No questions match “${search}”. Try another word or message us directly.` : `No encontramos preguntas con "${search}". Prueba con otra palabra o escríbenos directo.`}
           </p>
         ) : (
           <div className="flex flex-col gap-10">
@@ -131,7 +139,7 @@ export default function FaqPage() {
                             className="inline-flex items-center gap-1.5 text-xs font-semibold text-black/40 hover:text-black transition-colors"
                           >
                             <Link2 size={13} strokeWidth={2.25} />
-                            {copiedId === item.id ? 'Enlace copiado' : 'Copiar enlace a esta pregunta'}
+                            {copiedId === item.id ? (isEnglish ? 'Link copied' : 'Enlace copiado') : isEnglish ? 'Copy link to this question' : 'Copiar enlace a esta pregunta'}
                           </button>
                         </div>
                       </details>
@@ -144,7 +152,7 @@ export default function FaqPage() {
         )}
 
         <div className="mt-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-4">Sigue leyendo en el blog</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-4">{isEnglish ? 'Continue reading on the blog' : 'Sigue leyendo en el blog'}</p>
           <div className="grid sm:grid-cols-3 gap-4">
             {RELATED_ARTICLE_SLUGS.map((slug) => {
               const post = BLOG_POSTS_BY_SLUG[slug];
@@ -152,13 +160,13 @@ export default function FaqPage() {
               return (
                 <Link
                   key={slug}
-                  to={`/blog/${slug}`}
+                  to={localizePath(`/blog/${slug}`)}
                   className="group rounded-2xl border p-4 bg-white hover:shadow-md transition-shadow"
                   style={{ borderColor: 'rgba(0,0,0,0.07)' }}
                 >
-                  <p className="text-sm font-semibold text-black/85 leading-snug mb-2">{post.titulo}</p>
+                  <p className="text-sm font-semibold text-black/85 leading-snug mb-2">{isEnglish ? BLOG_EN[slug]?.title ?? post.titulo : post.titulo}</p>
                   <span className="inline-flex items-center gap-1 text-xs font-semibold text-black/45 group-hover:gap-1.5 transition-all">
-                    Leer <ArrowRight size={12} strokeWidth={2.25} />
+                    {isEnglish ? 'Read' : 'Leer'} <ArrowRight size={12} strokeWidth={2.25} />
                   </span>
                 </Link>
               );
@@ -171,8 +179,8 @@ export default function FaqPage() {
           style={{ borderColor: 'rgba(0,0,0,0.08)', backgroundColor: 'rgba(201,151,63,0.06)' }}
         >
           <div>
-            <p className="text-sm font-semibold text-black/85 mb-1">¿No encontraste tu respuesta?</p>
-            <p className="text-sm text-black/55">Escríbenos directo y te contestamos personalmente.</p>
+            <p className="text-sm font-semibold text-black/85 mb-1">{isEnglish ? 'Did not find your answer?' : '¿No encontraste tu respuesta?'}</p>
+            <p className="text-sm text-black/55">{isEnglish ? 'Message us and we will reply personally.' : 'Escríbenos directo y te contestamos personalmente.'}</p>
           </div>
           <a
             href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hola, tengo una pregunta que no encontré en las preguntas frecuentes:')}`}
@@ -182,13 +190,13 @@ export default function FaqPage() {
             style={{ backgroundColor: '#141414' }}
           >
             <MessageCircle size={16} strokeWidth={2.25} />
-            Preguntar por WhatsApp
+            {isEnglish ? 'Ask on WhatsApp' : 'Preguntar por WhatsApp'}
           </a>
         </div>
       </main>
 
       <PageFooter />
-      <WhatsAppFloatButton message="Hola, vi las preguntas frecuentes de la web y quisiera consultar algo más." />
+      <WhatsAppFloatButton message={isEnglish ? 'Hello, I read the FAQ and would like to ask something else.' : 'Hola, vi las preguntas frecuentes de la web y quisiera consultar algo más.'} />
     </div>
   );
 }

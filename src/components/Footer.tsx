@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import { WHATSAPP_LINK } from '../data/products';
 import { FacebookIcon, InstagramIcon, TikTokIcon } from './icons/SocialIcons';
+import { useLanguage } from '../context/LanguageContext';
 
 const GOLD = '#C9973F';
 
@@ -12,18 +13,18 @@ const SOCIALS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: 'Términos y condiciones', id: 'productos' },
-  { label: 'Política de privacidad', id: 'privacidad' },
-  { label: 'Política de cookies', id: 'cookies' },
-  { label: 'Envíos y devoluciones', id: 'devoluciones' },
+  { label: 'Términos y condiciones', labelEn: 'Terms and conditions', id: 'productos' },
+  { label: 'Política de privacidad', labelEn: 'Privacy policy', id: 'privacidad' },
+  { label: 'Política de cookies', labelEn: 'Cookie policy', id: 'cookies' },
+  { label: 'Envíos y devoluciones', labelEn: 'Shipping and returns', id: 'devoluciones' },
 ];
 
 const EXPLORE_LINKS = [
-  { label: 'Preguntas frecuentes', to: '/preguntas-frecuentes' },
-  { label: 'Galería de trabajos', to: '/galeria' },
-  { label: 'Guía de tallas', to: '/guia-de-tallas' },
-  { label: 'Clientes y testimonios', to: '/clientes' },
-  { label: 'Blog', to: '/blog' },
+  { label: 'Preguntas frecuentes', labelEn: 'Frequently asked questions', to: '/preguntas-frecuentes' },
+  { label: 'Galería de trabajos', labelEn: 'Work gallery', to: '/galeria' },
+  { label: 'Guía de tallas', labelEn: 'Size guide', to: '/guia-de-tallas' },
+  { label: 'Clientes y testimonios', labelEn: 'Clients and testimonials', to: '/clientes' },
+  { label: 'Blog', labelEn: 'Blog', to: '/blog' },
 ];
 
 interface FooterProps {
@@ -32,6 +33,7 @@ interface FooterProps {
 
 export default function Footer({ onOpenLegal }: FooterProps) {
   const year = new Date().getFullYear();
+  const { isEnglish, localizePath } = useLanguage();
 
   return (
     <footer style={{ backgroundColor: '#141414', fontFamily: 'Inter, sans-serif' }}>
@@ -50,18 +52,19 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               Alburqtex
             </span>
             <p className="text-sm text-white/50 mt-3 leading-relaxed max-w-xs">
-              Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti,
-              para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.
+              {isEnglish
+                ? 'High-quality garment manufacturing, embroidery, printing and sublimation. Made in Guayaquil for individuals, institutions and companies.'
+                : 'Confección, bordado, estampado y sublimado de alto nivel. Desde Guayaquil para ti, para instituciones y empresas. Fabricamos y personalizamos con calidad y confianza.'}
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Explora</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">{isEnglish ? 'Explore' : 'Explora'}</p>
             <ul className="space-y-2.5">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
-                    {link.label}
+                  <Link to={localizePath(link.to)} className="text-sm text-white/50 hover:text-white transition-colors">
+                    {isEnglish ? link.labelEn : link.label}
                   </Link>
                 </li>
               ))}
@@ -69,7 +72,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Contacto</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">{isEnglish ? 'Contact' : 'Contacto'}</p>
             <a
               href={WHATSAPP_LINK}
               target="_blank"
@@ -77,7 +80,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors mb-3"
             >
               <MessageCircle size={16} strokeWidth={2} style={{ color: GOLD }} />
-              Escríbenos por WhatsApp
+              {isEnglish ? 'Message us on WhatsApp' : 'Escríbenos por WhatsApp'}
             </a>
             <p className="text-sm text-white/50 leading-relaxed mb-5">
               Calle El Oro 1303, entre Antepara y Machala
@@ -110,7 +113,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
                     onClick={() => onOpenLegal(link.id)}
                     className="text-sm text-white/50 hover:text-white transition-colors text-left"
                   >
-                    {link.label}
+                    {isEnglish ? link.labelEn : link.label}
                   </button>
                 </li>
               ))}
@@ -120,14 +123,14 @@ export default function Footer({ onOpenLegal }: FooterProps) {
 
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           <p className="text-xs text-white/35">
-            © {year} Alburqtex. Todos los derechos reservados. Hecho en Ecuador.
+            © {year} Alburqtex. {isEnglish ? 'All rights reserved. Made in Ecuador.' : 'Todos los derechos reservados. Hecho en Ecuador.'}
           </p>
           <button
             type="button"
             onClick={() => onOpenLegal()}
             className="text-xs text-white/40 hover:text-white/70 transition-colors underline underline-offset-2 text-left sm:text-right"
           >
-            Ver todos los términos legales
+            {isEnglish ? 'View all legal terms' : 'Ver todos los términos legales'}
           </button>
         </div>
       </div>

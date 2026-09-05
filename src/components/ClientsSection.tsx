@@ -1,7 +1,9 @@
 import { CLIENTS } from '../data/clientes';
 import Reveal from './layout/Reveal';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ClientsSection() {
+  const { isEnglish } = useLanguage();
   return (
     <section
       className="w-full border-t"
@@ -12,7 +14,7 @@ export default function ClientsSection() {
           className="text-xs font-semibold uppercase text-black/40 text-center mb-8"
           style={{ letterSpacing: '0.18em' }}
         >
-          Confían en nosotros
+          {isEnglish ? 'Trusted by' : 'Confían en nosotros'}
         </p>
         <Reveal className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
           {CLIENTS.map((client) => (

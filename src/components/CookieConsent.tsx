@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 const STORAGE_KEY = 'alburqtex-cookie-consent';
 
@@ -7,6 +8,7 @@ interface CookieConsentProps {
 }
 
 export default function CookieConsent({ onOpenLegal }: CookieConsentProps) {
+  const { isEnglish } = useLanguage();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -28,14 +30,15 @@ export default function CookieConsent({ onOpenLegal }: CookieConsentProps) {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
         <p className="text-xs sm:text-sm text-white/65 leading-relaxed max-w-2xl">
-          Usamos almacenamiento esencial para recordar tu preferencia. No usamos cookies de
-          publicidad ni analítica de terceros.{' '}
+          {isEnglish
+            ? 'We use essential storage to remember your preference. We do not use advertising or third-party analytics cookies. '
+            : 'Usamos almacenamiento esencial para recordar tu preferencia. No usamos cookies de publicidad ni analítica de terceros. '}
           <button
             type="button"
             onClick={() => onOpenLegal('cookies')}
             className="underline underline-offset-2 hover:text-white transition-colors"
           >
-            Ver política de cookies
+            {isEnglish ? 'View cookie policy' : 'Ver política de cookies'}
           </button>
           .
         </p>
@@ -45,7 +48,7 @@ export default function CookieConsent({ onOpenLegal }: CookieConsentProps) {
             onClick={() => choose('rejected')}
             className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2.5 border border-white/20 text-white/80 hover:text-white hover:border-white/40 transition-colors"
           >
-            Rechazar
+            {isEnglish ? 'Reject' : 'Rechazar'}
           </button>
           <button
             type="button"
@@ -53,7 +56,7 @@ export default function CookieConsent({ onOpenLegal }: CookieConsentProps) {
             className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2.5 text-black transition-colors"
             style={{ backgroundColor: '#C9973F' }}
           >
-            Aceptar
+            {isEnglish ? 'Accept' : 'Aceptar'}
           </button>
         </div>
       </div>

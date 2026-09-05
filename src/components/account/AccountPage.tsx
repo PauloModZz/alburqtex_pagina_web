@@ -6,6 +6,7 @@ import { db } from '../../lib/firebase';
 import { checkPasswordStrength, PASSWORD_REQUIREMENTS } from '../../lib/validators';
 import { sizeLabel } from '../../lib/format';
 import SiteNav from '../layout/SiteNav';
+import { useLanguage } from '../../context/LanguageContext';
 
 const STATUS_LABEL: Record<string, string> = {
   pendiente: 'Pendiente de revisión',
@@ -14,6 +15,10 @@ const STATUS_LABEL: Record<string, string> = {
   en_produccion: 'En producción',
   completado: 'Completado',
   cancelado: 'Cancelado',
+};
+const STATUS_LABEL_EN: Record<string, string> = {
+  pendiente: 'Under review', cotizado: 'Quoted', confirmado: 'Confirmed',
+  en_produccion: 'In production', completado: 'Completed', cancelado: 'Cancelled',
 };
 
 interface OrderItem {
@@ -39,6 +44,7 @@ interface AccountPageProps {
 }
 
 export default function AccountPage({ onBack }: AccountPageProps) {
+  const { isEnglish } = useLanguage();
   const { user, signOut, updatePassword } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -70,11 +76,11 @@ export default function AccountPage({ onBack }: AccountPageProps) {
     setPasswordMessage(null);
     const check = checkPasswordStrength(newPassword);
     if (!check.valid) {
-      setPasswordError('La contraseña no cumple los requisitos mínimos.');
+      setPasswordError(isEnglish ? 'The password does not meet the minimum requirements.' : 'La contraseña no cumple los requisitos mínimos.');
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPasswordError('Las contraseñas no coinciden.');
+      setPasswordError(isEnglish ? 'Passwords do not match.' : 'Las contraseñas no coinciden.');
       return;
     }
     const { error } = await updatePassword(newPassword);
@@ -82,7 +88,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
       setPasswordError(error);
       return;
     }
-    setPasswordMessage('Contraseña actualizada.');
+    setPasswordMessage(isEnglish ? 'Password updated.' : 'Contraseña actualizada.');
     setNewPassword('');
     setConfirmPassword('');
     setShowPasswordForm(false);
@@ -103,12 +109,12 @@ export default function AccountPage({ onBack }: AccountPageProps) {
             className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/60 hover:text-black transition-colors mb-4"
           >
             <ArrowLeft size={16} strokeWidth={2.25} />
-            Volver
+            {isEnglish ? 'Back' : 'Volver'}
           </button>
           <h1
             style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(28px, 5vw, 44px)', textTransform: 'uppercase', color: '#141414' }}
           >
-            Mi cuenta
+            {isEnglish ? 'My account' : 'Mi cuenta'}
           </h1>
           <p className="text-sm text-black/50 mt-1">
             {fullName} · {user.email}
@@ -124,7 +130,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
             className="text-xs font-semibold uppercase tracking-wide rounded-full px-4 py-2.5 border transition-colors hover:bg-black/5"
             style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414' }}
           >
-            Cambiar contraseña
+            {isEnglish ? 'Change password' : 'Cambiar contraseña'}
           </button>
           <button
             type="button"
@@ -133,7 +139,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
             style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414' }}
           >
             <LogOut size={14} strokeWidth={2.25} />
-            Cerrar sesión
+            {isEnglish ? 'Sign out' : 'Cerrar sesión'}
           </button>
         </div>
 
@@ -147,7 +153,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Nueva contraseña"
+              placeholder={isEnglish ? 'New password' : 'Nueva contraseña'}
               className="w-full text-sm rounded-full border border-black/10 px-4 py-2.5 outline-none focus:border-black/30 transition-colors"
             />
             {newPassword.length > 0 && (
@@ -171,7 +177,7 @@ export default function AccountPage({ onBack }: AccountPageProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirmar nueva contraseña"
+              placeholder={isEnglish ? 'Confirm new password' : 'Confirmar nueva contraseña'}
               className="w-full text-sm rounded-full border border-black/10 px-4 py-2.5 outline-none focus:border-black/30 transition-colors"
             />
             {passwordError && <p className="text-xs text-red-600">{passwordError}</p>}
@@ -180,35 +186,35 @@ export default function AccountPage({ onBack }: AccountPageProps) {
               className="rounded-full py-2.5 text-sm font-semibold uppercase tracking-wide text-white"
               style={{ backgroundColor: '#141414' }}
             >
-              Guardar
+              {isEnglish ? 'Save' : 'Guardar'}
             </button>
           </form>
         )}
         {passwordMessage && <p className="text-xs text-green-700 mb-8 -mt-6">{passwordMessage}</p>}
 
-        <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-4">Mis pedidos</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-4">{isEnglish ? 'My orders' : 'Mis pedidos'}</p>
         {loadingOrders ? (
-          <p className="text-sm text-black/40">Cargando...</p>
+          <p className="text-sm text-black/40">{isEnglish ? 'Loading...' : 'Cargando...'}</p>
         ) : orders.length === 0 ? (
-          <p className="text-sm text-black/40">Todavía no tienes pedidos registrados.</p>
+          <p className="text-sm text-black/40">{isEnglish ? 'You do not have any registered orders yet.' : 'Todavía no tienes pedidos registrados.'}</p>
         ) : (
           <div className="flex flex-col gap-3">
             {orders.map((order) => (
               <div key={order.id} className="bg-white rounded-2xl border p-5" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#C9973F' }}>
-                    {STATUS_LABEL[order.status] ?? order.status}
+                    {(isEnglish ? STATUS_LABEL_EN : STATUS_LABEL)[order.status] ?? order.status}
                   </span>
                   <span className="text-xs text-black/40">
-                    {order.createdAt?.toDate().toLocaleDateString('es-EC', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}
+                    {order.createdAt?.toDate().toLocaleDateString(isEnglish ? 'en-US' : 'es-EC', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}
                   </span>
                 </div>
                 <ul className="space-y-1">
                   {order.items.map((item, i) => (
                     <li key={i} className="text-sm text-black/70">
                       {item.quantity}x {item.productName} — {sizeLabel(item.size).toLowerCase()}
-                      {item.hasName && ` · nombre: "${item.nameText}"`}
-                      {item.hasLogo && ' · con logo'}
+                      {item.hasName && ` · ${isEnglish ? 'name' : 'nombre'}: "${item.nameText}"`}
+                      {item.hasLogo && (isEnglish ? ' · with logo' : ' · con logo')}
                     </li>
                   ))}
                 </ul>

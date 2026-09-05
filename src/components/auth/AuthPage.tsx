@@ -8,6 +8,7 @@ import { DEFAULT_COUNTRY, toE164, type CountryCode } from '../../lib/phone';
 import PhoneInput from '../PhoneInput';
 import TurnstileWidget from './TurnstileWidget';
 import SiteNav from '../layout/SiteNav';
+import { useLanguage } from '../../context/LanguageContext';
 
 const GOLD = '#C9973F';
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
@@ -36,6 +37,7 @@ interface AuthPageProps {
 }
 
 export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
+  const { isEnglish } = useLanguage();
   const { signIn, signUp, resetPassword, signInWithGoogle } = useAuth();
   const [mode, setMode] = useState<Mode>('login');
   const [identifier, setIdentifier] = useState(''); // login/forgot: correo, usuario o teléfono
@@ -67,8 +69,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
         <SiteNav />
         <div className="max-w-md text-center">
           <p className="text-sm text-black/60 leading-relaxed mb-6">
-            El sistema de cuentas todavía no está conectado. El dueño del sitio necesita configurar
-            un proyecto de Firebase (ver <code className="text-xs bg-black/5 px-1.5 py-0.5 rounded">SETUP.md</code>) antes de que el registro e inicio de sesión funcionen.
+            {isEnglish ? 'The account system is not configured yet. Firebase must be connected before registration and sign-in can work.' : <>El sistema de cuentas todavía no está conectado. El dueño del sitio necesita configurar un proyecto de Firebase (ver <code className="text-xs bg-black/5 px-1.5 py-0.5 rounded">SETUP.md</code>) antes de que el registro e inicio de sesión funcionen.</>}
           </p>
           <button
             type="button"
@@ -76,7 +77,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors"
           >
             <ArrowLeft size={16} strokeWidth={2.25} />
-            Volver
+            {isEnglish ? 'Back' : 'Volver'}
           </button>
         </div>
       </div>
@@ -93,13 +94,13 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
     resetMessages();
 
     if (needsCaptcha && !captchaToken) {
-      setError('Completa la verificación de seguridad.');
+      setError(isEnglish ? 'Complete the security verification.' : 'Completa la verificación de seguridad.');
       return;
     }
 
     if (mode === 'forgot') {
       if (!identifier.trim()) {
-        setError('Ingresa tu usuario, correo o teléfono.');
+        setError(isEnglish ? 'Enter your username, email or phone number.' : 'Ingresa tu usuario, correo o teléfono.');
         return;
       }
       setSubmitting(true);
@@ -109,30 +110,30 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
         setError(err);
         return;
       }
-      setInfo('Te enviamos un correo con instrucciones para restablecer tu contraseña.');
+      setInfo(isEnglish ? 'We sent password reset instructions to your email.' : 'Te enviamos un correo con instrucciones para restablecer tu contraseña.');
       return;
     }
 
     if (mode === 'register') {
       if (!isValidUsername(username)) {
-        setError('El usuario debe tener al menos 3 caracteres (letras, números, "_" o ".").');
+        setError(isEnglish ? 'The username must contain at least 3 characters: letters, numbers, “_” or “.”.' : 'El usuario debe tener al menos 3 caracteres (letras, números, "_" o ".").');
         return;
       }
       if (!isValidEmail(email)) {
-        setError('Ingresa un correo válido.');
+        setError(isEnglish ? 'Enter a valid email address.' : 'Ingresa un correo válido.');
         return;
       }
       const e164Phone = toE164(phone, phoneCountry);
       if (!e164Phone) {
-        setError('Ingresa un número de teléfono válido para el país elegido.');
+        setError(isEnglish ? 'Enter a valid phone number for the selected country.' : 'Ingresa un número de teléfono válido para el país elegido.');
         return;
       }
       if (!passwordCheck.valid) {
-        setError('La contraseña no cumple los requisitos mínimos.');
+        setError(isEnglish ? 'The password does not meet the minimum requirements.' : 'La contraseña no cumple los requisitos mínimos.');
         return;
       }
       if (password !== confirmPassword) {
-        setError('Las contraseñas no coinciden.');
+        setError(isEnglish ? 'Passwords do not match.' : 'Las contraseñas no coinciden.');
         return;
       }
       setSubmitting(true);
@@ -143,14 +144,14 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
         setRegisterAttempts((a) => a + 1);
         return;
       }
-      setInfo('¡Cuenta creada! Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.');
+      setInfo(isEnglish ? 'Account created! Check your email before signing in.' : '¡Cuenta creada! Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.');
       setMode('login');
       return;
     }
 
     // login
     if (!identifier.trim()) {
-      setError('Ingresa tu usuario, correo o teléfono.');
+      setError(isEnglish ? 'Enter your username, email or phone number.' : 'Ingresa tu usuario, correo o teléfono.');
       return;
     }
     setSubmitting(true);
@@ -190,7 +191,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/60 hover:text-black transition-colors mb-8"
         >
           <ArrowLeft size={16} strokeWidth={2.25} />
-          Volver
+          {isEnglish ? 'Back' : 'Volver'}
         </button>
 
         <h1
@@ -203,14 +204,14 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
             color: '#141414',
           }}
         >
-          {mode === 'login' && 'Iniciar sesión'}
-          {mode === 'register' && 'Crear cuenta'}
-          {mode === 'forgot' && 'Recuperar contraseña'}
+          {mode === 'login' && (isEnglish ? 'Sign in' : 'Iniciar sesión')}
+          {mode === 'register' && (isEnglish ? 'Create account' : 'Crear cuenta')}
+          {mode === 'forgot' && (isEnglish ? 'Reset password' : 'Recuperar contraseña')}
         </h1>
         <p className="text-sm text-black/50 mb-8">
-          {mode === 'login' && 'Ingresa con tu usuario, correo o teléfono.'}
-          {mode === 'register' && 'Regístrate para hacer pedidos directamente desde la web.'}
-          {mode === 'forgot' && 'Te enviaremos un enlace al correo de tu cuenta.'}
+          {mode === 'login' && (isEnglish ? 'Use your username, email or phone number.' : 'Ingresa con tu usuario, correo o teléfono.')}
+          {mode === 'register' && (isEnglish ? 'Register to place orders directly on the website.' : 'Regístrate para hacer pedidos directamente desde la web.')}
+          {mode === 'forgot' && (isEnglish ? 'We will send a reset link to your account email.' : 'Te enviaremos un enlace al correo de tu cuenta.')}
         </p>
 
         {mode !== 'forgot' && (
@@ -222,11 +223,11 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               className="w-full flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold border transition-colors hover:bg-black/5 disabled:opacity-50 mb-6"
               style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414' }}
             >
-              Continuar con Google
+              {isEnglish ? 'Continue with Google' : 'Continuar con Google'}
             </button>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }} />
-              <span className="text-xs text-black/35 uppercase tracking-widest">o</span>
+              <span className="text-xs text-black/35 uppercase tracking-widest">{isEnglish ? 'or' : 'o'}</span>
               <div className="h-px flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }} />
             </div>
           </>
@@ -239,30 +240,30 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Nombre de usuario"
+                placeholder={isEnglish ? 'Username' : 'Nombre de usuario'}
                 className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
                 autoComplete="username"
               />
               <FieldHint
                 show={username.length > 0}
                 ok={isValidUsername(username)}
-                okLabel="Usuario válido"
-                badLabel='Mínimo 3 caracteres: letras, números, "_" o "."'
+                okLabel={isEnglish ? 'Valid username' : 'Usuario válido'}
+                badLabel={isEnglish ? 'At least 3 characters: letters, numbers, “_” or “.”' : 'Mínimo 3 caracteres: letras, números, "_" o "."'}
               />
 
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Correo electrónico"
+                placeholder={isEnglish ? 'Email address' : 'Correo electrónico'}
                 className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
                 autoComplete="email"
               />
               <FieldHint
                 show={email.length > 0}
                 ok={isValidEmail(email)}
-                okLabel="Correo válido"
-                badLabel="Ingresa un correo válido (ej: nombre@correo.com)"
+                okLabel={isEnglish ? 'Valid email' : 'Correo válido'}
+                badLabel={isEnglish ? 'Enter a valid email address' : 'Ingresa un correo válido (ej: nombre@correo.com)'}
               />
 
               <PhoneInput
@@ -274,8 +275,8 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               <FieldHint
                 show={phone.length > 0}
                 ok={toE164(phone, phoneCountry) !== null}
-                okLabel="Número válido"
-                badLabel="Ingresa un número válido para el país elegido"
+                okLabel={isEnglish ? 'Valid number' : 'Número válido'}
+                badLabel={isEnglish ? 'Enter a valid number for the selected country' : 'Ingresa un número válido para el país elegido'}
               />
             </>
           )}
@@ -285,7 +286,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="Usuario, correo o teléfono"
+              placeholder={isEnglish ? 'Username, email or phone' : 'Usuario, correo o teléfono'}
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
               autoComplete="username"
             />
@@ -297,7 +298,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPasswordFocused(true)}
-              placeholder="Contraseña"
+              placeholder={isEnglish ? 'Password' : 'Contraseña'}
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
               autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
             />
@@ -326,7 +327,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirmar contraseña"
+              placeholder={isEnglish ? 'Confirm password' : 'Confirmar contraseña'}
               className="w-full text-sm rounded-full border border-black/10 bg-white px-4 py-3 outline-none focus:border-black/30 transition-colors"
               autoComplete="new-password"
             />
@@ -336,8 +337,8 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
             <FieldHint
               show={confirmPassword.length > 0}
               ok={confirmPassword === password}
-              okLabel="Las contraseñas coinciden"
-              badLabel="Las contraseñas no coinciden"
+              okLabel={isEnglish ? 'Passwords match' : 'Las contraseñas coinciden'}
+              badLabel={isEnglish ? 'Passwords do not match' : 'Las contraseñas no coinciden'}
             />
           )}
 
@@ -350,7 +351,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
               }}
               className="text-xs text-black/45 hover:text-black text-left transition-colors -mt-1"
             >
-              ¿Olvidaste tu contraseña?
+              {isEnglish ? 'Forgot your password?' : '¿Olvidaste tu contraseña?'}
             </button>
           )}
 
@@ -370,19 +371,19 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
             style={{ backgroundColor: '#141414' }}
           >
             {submitting
-              ? 'Un momento...'
+              ? (isEnglish ? 'Please wait...' : 'Un momento...')
               : mode === 'login'
-                ? 'Iniciar sesión'
+                ? (isEnglish ? 'Sign in' : 'Iniciar sesión')
                 : mode === 'register'
-                  ? 'Crear cuenta'
-                  : 'Enviar enlace'}
+                  ? (isEnglish ? 'Create account' : 'Crear cuenta')
+                  : (isEnglish ? 'Send reset link' : 'Enviar enlace')}
           </button>
         </form>
 
         <p className="text-sm text-black/50 text-center mt-6">
           {mode === 'login' && (
             <>
-              ¿No tienes cuenta?{' '}
+              {isEnglish ? 'New to Alburqtex? ' : '¿No tienes cuenta? '}
               <button
                 type="button"
                 onClick={() => {
@@ -392,13 +393,13 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
                 className="font-semibold text-black hover:underline"
                 style={{ color: GOLD }}
               >
-                Regístrate
+                {isEnglish ? 'Create an account' : 'Regístrate'}
               </button>
             </>
           )}
           {(mode === 'register' || mode === 'forgot') && (
             <>
-              ¿Ya tienes cuenta?{' '}
+              {isEnglish ? 'Already have an account? ' : '¿Ya tienes cuenta? '}
               <button
                 type="button"
                 onClick={() => {
@@ -408,7 +409,7 @@ export default function AuthPage({ onBack, onAuthenticated }: AuthPageProps) {
                 className="font-semibold hover:underline"
                 style={{ color: GOLD }}
               >
-                Inicia sesión
+                {isEnglish ? 'Sign in' : 'Inicia sesión'}
               </button>
             </>
           )}

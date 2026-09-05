@@ -1,6 +1,7 @@
 import { ArrowRight, Info, Lightbulb, TriangleAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ContentBlock } from '../../data/blog';
+import { useLanguage } from '../../context/LanguageContext';
 
 const GOLD = '#C9973F';
 
@@ -11,6 +12,7 @@ const CALLOUT_STYLE = {
 };
 
 export default function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
+  const { isEnglish, localizePath } = useLanguage();
   return (
     <div className="flex flex-col gap-5">
       {blocks.map((block, i) => {
@@ -57,7 +59,7 @@ export default function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
               <Icon size={18} strokeWidth={2.25} style={{ color }} className="shrink-0 mt-0.5" />
               <div>
                 <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color }}>
-                  {label}
+                  {isEnglish ? ({ Consejo: 'Tip', Advertencia: 'Warning', Dato: 'Good to know' }[label] ?? label) : label}
                 </p>
                 <p className="text-sm text-black/70 leading-relaxed">{block.text}</p>
               </div>
@@ -68,7 +70,7 @@ export default function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           return (
             <Link
               key={i}
-              to={block.href}
+              to={localizePath(block.href)}
               className="group max-w-[68ch] rounded-2xl p-5 flex items-center justify-between gap-4 border transition-colors hover:bg-black/[0.02]"
               style={{ borderColor: 'rgba(0,0,0,0.1)' }}
             >

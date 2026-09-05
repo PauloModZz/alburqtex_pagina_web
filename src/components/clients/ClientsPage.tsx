@@ -10,16 +10,23 @@ import { CLIENTS, type SectorCliente } from '../../data/clientes';
 import { useApprovedComments } from '../../lib/useApprovedComments';
 import { WHATSAPP_LINK } from '../../data/products';
 import { useSeo, useJsonLd } from '../../lib/seo';
+import { useLanguage } from '../../context/LanguageContext';
 
 const GOLD = '#C9973F';
+const SECTOR_EN: Record<SectorCliente, string> = {
+  'Fuerzas Armadas': 'armed forces', Educación: 'education',
+  'Deporte y calzado': 'sports and footwear', 'Hogar y decoración': 'home and decor', Empresas: 'companies',
+};
 
 export default function ClientsPage() {
+  const { isEnglish, localizePath } = useLanguage();
   const { comments, loading } = useApprovedComments();
 
   useSeo({
-    title: 'Clientes y testimonios',
-    description:
-      'Empresas, instituciones y personas que ya confiaron en Alburqtex para confeccionar y bordar sus uniformes, prendas corporativas y piezas personalizadas.',
+    title: isEnglish ? 'Customers and testimonials' : 'Clientes y testimonios',
+    description: isEnglish
+      ? 'Companies, institutions and individuals who trust Alburqtex for uniforms, corporate apparel and personalized textiles.'
+      : 'Empresas, instituciones y personas que ya confiaron en Alburqtex para confeccionar y bordar sus uniformes, prendas corporativas y piezas personalizadas.',
     path: '/clientes',
   });
 
@@ -56,9 +63,9 @@ export default function ClientsPage() {
   return (
     <div className="min-h-screen w-full" style={{ backgroundColor: '#FAF7F2', fontFamily: 'Inter, sans-serif' }}>
       <PageHeader
-        eyebrow="Confianza"
-        title="Clientes y testimonios"
-        description="Empresas, instituciones y personas particulares que ya bordaron con nosotros."
+        eyebrow={isEnglish ? 'Trust' : 'Confianza'}
+        title={isEnglish ? 'Customers and testimonials' : 'Clientes y testimonios'}
+        description={isEnglish ? 'Companies, institutions and individuals who already work with us.' : 'Empresas, instituciones y personas particulares que ya bordaron con nosotros.'}
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
@@ -71,7 +78,7 @@ export default function ClientsPage() {
                 className="text-xs font-semibold rounded-full px-3 py-1.5"
                 style={{ backgroundColor: 'rgba(201,151,63,0.1)', color: '#8a6a2a' }}
               >
-                {count} {sector.toLowerCase()}
+                {count} {isEnglish ? SECTOR_EN[sector] : sector.toLowerCase()}
               </span>
             ))}
           </div>
@@ -97,10 +104,10 @@ export default function ClientsPage() {
         {/* Bloque de confianza */}
         <section className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6">
           {[
-            { label: 'Años de experiencia', value: '+20' },
-            { label: 'Prendas bordadas al año', value: '+9,000' },
-            { label: 'Clientes recurrentes', value: '100%' },
-            { label: 'Sectores atendidos', value: String(bySector.length) },
+            { label: isEnglish ? 'Years of experience' : 'Años de experiencia', value: '+20' },
+            { label: isEnglish ? 'Garments produced yearly' : 'Prendas bordadas al año', value: '+9,000' },
+            { label: isEnglish ? 'Returning customers' : 'Clientes recurrentes', value: '100%' },
+            { label: isEnglish ? 'Industries served' : 'Sectores atendidos', value: String(bySector.length) },
           ].map((stat) => (
             <div key={stat.label}>
               <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(22px, 3vw, 32px)', color: '#141414', lineHeight: 1 }}>
@@ -114,10 +121,10 @@ export default function ClientsPage() {
         {/* Testimonios reales */}
         <section className="mt-16">
           <span className="text-xs font-semibold uppercase tracking-widest block mb-2" style={{ color: GOLD }}>
-            Testimonios
+            {isEnglish ? 'Testimonials' : 'Testimonios'}
           </span>
           <div className="flex items-center gap-3 mb-8">
-            <h2 className="text-xl font-bold text-black/90">Lo que dicen quienes ya pidieron con nosotros</h2>
+            <h2 className="text-xl font-bold text-black/90">{isEnglish ? 'What customers say about working with us' : 'Lo que dicen quienes ya pidieron con nosotros'}</h2>
             {comments.length > 0 && (
               <span className="flex items-center gap-1.5 text-sm text-black/50 shrink-0">
                 <StarRating value={Math.round(average)} size={14} />
@@ -128,7 +135,7 @@ export default function ClientsPage() {
 
           {!loading && comments.length === 0 && (
             <div className="rounded-2xl border p-10 text-center" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-              <p className="text-sm text-black/45">Estamos recogiendo las opiniones de nuestros clientes.</p>
+              <p className="text-sm text-black/45">{isEnglish ? 'We are collecting feedback from our customers.' : 'Estamos recogiendo las opiniones de nuestros clientes.'}</p>
             </div>
           )}
 
@@ -151,52 +158,51 @@ export default function ClientsPage() {
             </div>
           )}
           <p className="text-xs text-black/35 mt-4">
-            Estos testimonios son comentarios reales enviados por clientes desde nuestra web, revisados antes de
-            publicarse.
+            {isEnglish ? 'These are genuine reviews submitted by customers through our website and checked before publication.' : 'Estos testimonios son comentarios reales enviados por clientes desde nuestra web, revisados antes de publicarse.'}
           </p>
         </section>
 
         {/* Casos de éxito */}
         <section className="mt-16">
           <span className="text-xs font-semibold uppercase tracking-widest block mb-2" style={{ color: GOLD }}>
-            Casos
+            {isEnglish ? 'Case studies' : 'Casos'}
           </span>
-          <h2 className="text-xl font-bold text-black/90 mb-6">Casos de éxito</h2>
+          <h2 className="text-xl font-bold text-black/90 mb-6">{isEnglish ? 'Customer success' : 'Casos de éxito'}</h2>
           <div className="rounded-2xl border p-6 sm:p-8" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-            <p className="text-sm font-bold text-black/85 mb-5">Ser el proveedor de bordado de confianza para toda la producción de una marca</p>
+            <p className="text-sm font-bold text-black/85 mb-5">{isEnglish ? 'A trusted textile partner for an entire brand’s production' : 'Ser el proveedor de bordado de confianza para toda la producción de una marca'}</p>
             <div className="grid sm:grid-cols-3 gap-6">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>El reto</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>{isEnglish ? 'The challenge' : 'El reto'}</p>
                 <p className="text-sm text-black/60 leading-relaxed">
-                  Marcas como D&apos;Casa y Pisadas, además de instituciones como la Armada del Ecuador, el Ejército
+                  {isEnglish ? 'Brands such as D’Casa and Pisadas, along with institutions including the Ecuadorian Navy, Army and Colegio Alemán Humboldt, needed one dependable partner for recurring production—not occasional isolated orders, but consistent capacity month after month.' : <>Marcas como D&apos;Casa y Pisadas, además de instituciones como la Armada del Ecuador, el Ejército
                   Ecuatoriano y el Colegio Alemán Humboldt, necesitaban un solo proveedor de bordado confiable para
                   toda su producción recurrente — no pedidos sueltos de vez en cuando, sino un socio que sostuviera
-                  el volumen mes a mes sin fallar.
+                  el volumen mes a mes sin fallar.</>}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>Qué hicimos</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>{isEnglish ? 'What we did' : 'Qué hicimos'}</p>
                 <p className="text-sm text-black/60 leading-relaxed">
-                  Nos convertimos en su distribuidor y proveedor oficial de bordado, asumiendo toda la producción de
+                  {isEnglish ? 'We became their official production and personalization partner, taking responsibility for the ongoing workflow instead of treating every replenishment as a disconnected order. For D’Casa, this includes 100% of its personalized garments.' : <>Nos convertimos en su distribuidor y proveedor oficial de bordado, asumiendo toda la producción de
                   forma continua en vez de trabajar pedido por pedido. Con D&apos;Casa, por ejemplo, eso significa
-                  bordar el 100% de sus prendas personalizadas.
+                  bordar el 100% de sus prendas personalizadas.</>}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>El resultado</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>{isEnglish ? 'The result' : 'El resultado'}</p>
                 <p className="text-sm text-black/60 leading-relaxed">
-                  En meses de alta demanda llegamos a producir hasta <strong className="text-black/80">1,000 piezas individuales</strong> solo
+                  {isEnglish ? <>During high-demand months we produce up to <strong className="text-black/80">1,000 individual pieces</strong> for D’Casa alone—the same reliable volume we support for Pisadas and the other institutions that trust us.</> : <>En meses de alta demanda llegamos a producir hasta <strong className="text-black/80">1,000 piezas individuales</strong> solo
                   para D&apos;Casa — el mismo nivel de volumen que sostenemos con Pisadas y con las demás
-                  instituciones que ya confían en nosotros.
+                  instituciones que ya confían en nosotros.</>}
                 </p>
               </div>
             </div>
           </div>
           <Link
-            to="/galeria"
+            to={localizePath('/galeria')}
             className="group mt-4 inline-flex items-center gap-2 text-sm font-semibold text-black/70 hover:text-black transition-colors"
           >
-            Mientras tanto, mira trabajos reales en la galería
+            {isEnglish ? 'See real projects in our gallery' : 'Mientras tanto, mira trabajos reales en la galería'}
             <ArrowRight size={14} strokeWidth={2.25} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </section>
@@ -205,22 +211,22 @@ export default function ClientsPage() {
           className="mt-16 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-5 justify-between border"
           style={{ borderColor: 'rgba(0,0,0,0.08)', backgroundColor: 'rgba(201,151,63,0.06)' }}
         >
-          <p className="text-sm font-semibold text-black/85">¿Quieres ser el próximo caso? Cotiza tu pedido.</p>
+          <p className="text-sm font-semibold text-black/85">{isEnglish ? 'Want to become our next success story? Request a quote.' : '¿Quieres ser el próximo caso? Cotiza tu pedido.'}</p>
           <a
-            href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hola, vi la página de clientes y testimonios y quiero cotizar mi pedido.')}`}
+            href={`${WHATSAPP_LINK}?text=${encodeURIComponent(isEnglish ? 'Hello, I saw your customer stories and would like a quote.' : 'Hola, vi la página de clientes y testimonios y quiero cotizar mi pedido.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold uppercase tracking-wide text-white shrink-0"
             style={{ backgroundColor: '#141414' }}
           >
-            Cotiza tu pedido
+            {isEnglish ? 'Request a quote' : 'Cotiza tu pedido'}
             <ArrowRight size={16} strokeWidth={2.25} />
           </a>
         </div>
       </main>
 
       <PageFooter />
-      <WhatsAppFloatButton message="Hola, vi la página de clientes y testimonios y quiero hacer un pedido." />
+      <WhatsAppFloatButton message={isEnglish ? 'Hello, I saw your customer stories and would like to place an order.' : 'Hola, vi la página de clientes y testimonios y quiero hacer un pedido.'} />
     </div>
   );
 }

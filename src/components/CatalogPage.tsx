@@ -6,10 +6,13 @@ import { WHATSAPP_LINK } from '../data/products';
 import { useCart } from '../context/CartContext';
 import ProductOrderModal from './order/ProductOrderModal';
 import { SITE_NAV_LINKS } from '../data/navLinks';
+import { useLanguage } from '../context/LanguageContext';
+import { catalogTextEn } from '../data/en';
 
 const GOLD = '#C9973F';
 
 function InlineNavMenu() {
+  const { language, isEnglish, localizePath, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,28 +39,34 @@ function InlineNavMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="true"
-        aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+        aria-label={open ? (isEnglish ? 'Close menu' : 'Cerrar menú') : isEnglish ? 'Open menu' : 'Abrir menú'}
         className="text-black/60 hover:text-black transition-colors"
       >
         {open ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={2} />}
       </button>
       {open && (
         <nav
-          aria-label="Menú principal"
+          aria-label={isEnglish ? 'Main menu' : 'Menú principal'}
           className="absolute top-8 right-0 w-64 rounded-2xl bg-white shadow-xl border overflow-hidden py-2 z-50"
           style={{ borderColor: 'rgba(0,0,0,0.08)' }}
         >
           {SITE_NAV_LINKS.map((link) => (
             <Link
               key={link.to}
-              to={link.to}
+              to={localizePath(link.to)}
               className="block px-5 py-3 text-sm font-semibold text-black/75 hover:text-black transition-colors"
               onMouseEnter={(e) => (e.currentTarget.style.color = GOLD)}
               onMouseLeave={(e) => (e.currentTarget.style.color = '')}
             >
-              {link.label}
+              {isEnglish ? link.labelEn : link.label}
             </Link>
           ))}
+          <div className="mx-4 mt-2 flex items-center justify-between border-t border-black/10 pt-3 pb-1">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-black/35">{isEnglish ? 'Language' : 'Idioma'}</span>
+            <div className="flex rounded-full bg-[#FAF7F2] p-0.5">
+              {(['es', 'en'] as const).map((code) => <button key={code} type="button" onClick={() => setLanguage(code)} aria-pressed={language === code} className="rounded-full px-3 py-1.5 text-[10px] font-bold uppercase" style={language === code ? { backgroundColor: '#141414', color: '#fff' } : undefined}>{code}</button>)}
+            </div>
+          </div>
         </nav>
       )}
     </div>
@@ -75,6 +84,7 @@ const CATEGORY_COUNTS: Record<string, number> = CATEGORY_OPTIONS.reduce(
 );
 
 function CategoryFilterBar({ category, onChange }: { category: string; onChange: (cat: string) => void }) {
+  const { isEnglish } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -108,8 +118,8 @@ function CategoryFilterBar({ category, onChange }: { category: string; onChange:
           backgroundColor: '#fff',
         }}
       >
-        <span className="text-black/40">Categoría:</span>
-        <span className="font-semibold">{category}</span>
+        <span className="text-black/40">{isEnglish ? 'Category:' : 'Categoría:'}</span>
+        <span className="font-semibold">{isEnglish ? (category === 'Todas' ? 'All' : catalogTextEn(category)) : category}</span>
         <ChevronDown
           size={16}
           strokeWidth={2.25}
@@ -121,7 +131,7 @@ function CategoryFilterBar({ category, onChange }: { category: string; onChange:
       {open && (
         <div
           role="listbox"
-          aria-label="Categorías"
+          aria-label={isEnglish ? 'Categories' : 'Categorías'}
           className="absolute left-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] max-h-80 overflow-y-auto rounded-2xl bg-white shadow-xl border py-2 z-30"
           style={{ borderColor: 'rgba(0,0,0,0.08)' }}
         >
@@ -141,7 +151,7 @@ function CategoryFilterBar({ category, onChange }: { category: string; onChange:
                 style={{ color: isActive ? GOLD : '#141414', fontWeight: isActive ? 700 : 500 }}
               >
                 <Check size={14} strokeWidth={2.5} className={isActive ? 'opacity-100' : 'opacity-0'} />
-                <span className="flex-1">{opt}</span>
+                <span className="flex-1">{isEnglish ? (opt === 'Todas' ? 'All' : catalogTextEn(opt)) : opt}</span>
                 <span className="text-xs text-black/35">{CATEGORY_COUNTS[opt]}</span>
               </button>
             );
@@ -159,6 +169,7 @@ interface CatalogPageProps {
 }
 
 export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: CatalogPageProps) {
+  const { isEnglish } = useLanguage();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Todas');
   const [orderingProduct, setOrderingProduct] = useState<CatalogProduct | null>(null);
@@ -173,10 +184,11 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
         !q ||
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
-        p.material.toLowerCase().includes(q);
+        p.material.toLowerCase().includes(q) ||
+        (isEnglish && `${catalogTextEn(p.name)} ${catalogTextEn(p.category)} ${catalogTextEn(p.material)}`.toLowerCase().includes(q));
       return matchesCategory && matchesSearch;
     });
-  }, [search, category]);
+  }, [search, category, isEnglish]);
 
   return (
     <div
@@ -191,16 +203,16 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
             className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-black/70 hover:text-black transition-colors"
           >
             <ArrowLeft size={16} strokeWidth={2.25} />
-            Volver
+            {isEnglish ? 'Back' : 'Volver'}
           </button>
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline text-xs font-semibold uppercase tracking-widest text-black/40">
-              {filtered.length} de {CATALOG.length} productos
+              {filtered.length} {isEnglish ? 'of' : 'de'} {CATALOG.length} {isEnglish ? 'products' : 'productos'}
             </span>
             <button
               type="button"
               onClick={onOpenAccount}
-              aria-label="Mi cuenta"
+              aria-label={isEnglish ? 'My account' : 'Mi cuenta'}
               className="text-black/60 hover:text-black transition-colors"
             >
               <User size={20} strokeWidth={2} />
@@ -208,7 +220,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
             <button
               type="button"
               onClick={onOpenCart}
-              aria-label="Carrito"
+              aria-label={isEnglish ? 'Cart' : 'Carrito'}
               className="relative text-black/60 hover:text-black transition-colors"
             >
               <ShoppingBag size={20} strokeWidth={2} />
@@ -237,10 +249,10 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
             color: '#141414',
           }}
         >
-          Catálogo Alburqtex
+          {isEnglish ? 'Alburqtex catalog' : 'Catálogo Alburqtex'}
         </h1>
         <p className="text-sm text-black/55 mt-2 mb-5 max-w-xl">
-          Confeccionamos y personalizamos con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.
+          {isEnglish ? 'We manufacture and personalize garments with your logo, name or crest. Colors and quantities made to order in Ecuador.' : 'Confeccionamos y personalizamos con tu logo, nombre o escudo. Colores y cantidades a pedido — elaborado en Ecuador.'}
         </p>
 
         {/* Búsqueda: fila propia, no compite con las categorías */}
@@ -254,7 +266,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar producto o material..."
+            placeholder={isEnglish ? 'Search products or materials...' : 'Buscar producto o material...'}
             className="w-full text-sm rounded-full border border-black/10 bg-white pl-9 pr-4 py-2.5 outline-none focus:border-black/30 transition-colors"
           />
         </div>
@@ -263,13 +275,13 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
 
         {filtered.length === 0 ? (
           <div className="text-center py-24 text-black/40 text-sm">
-            No se encontraron productos con esos filtros.
+            {isEnglish ? 'No products match these filters.' : 'No se encontraron productos con esos filtros.'}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
             {filtered.map((product) => {
               const whatsappHref = `${WHATSAPP_LINK}?text=${encodeURIComponent(
-                `Hola, quiero cotizar: ${product.name} (${product.sku})`,
+                isEnglish ? `Hello, I would like a quote for: ${catalogTextEn(product.name)} (${product.sku})` : `Hola, quiero cotizar: ${product.name} (${product.sku})`,
               )}`;
               return (
                 <div
@@ -281,7 +293,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                     {product.fotoReal ? (
                       <img
                         src={product.image}
-                        alt={product.name}
+                        alt={isEnglish ? catalogTextEn(product.name) : product.name}
                         loading="lazy"
                         className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                       />
@@ -289,7 +301,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                       <div className="flex flex-col items-center justify-center gap-2 text-center px-2">
                         <ImageOff size={22} strokeWidth={1.75} className="text-black/25" />
                         <span className="text-[11px] font-medium text-black/35 leading-tight">
-                          Foto próximamente
+                          {isEnglish ? 'Photo coming soon' : 'Foto próximamente'}
                         </span>
                       </div>
                     )}
@@ -299,12 +311,12 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                       className="text-[10px] font-semibold uppercase tracking-widest mb-1"
                       style={{ color: GOLD }}
                     >
-                      {product.category}
+                      {isEnglish ? catalogTextEn(product.category) : product.category}
                     </span>
                     <h3 className="text-sm font-semibold leading-snug text-black/90 mb-1 line-clamp-2">
-                      {product.name}
+                      {isEnglish ? catalogTextEn(product.name) : product.name}
                     </h3>
-                    <p className="text-xs text-black/45 mb-3 line-clamp-1">{product.material}</p>
+                    <p className="text-xs text-black/45 mb-3 line-clamp-1">{isEnglish ? catalogTextEn(product.material) : product.material}</p>
                     <div className="mt-auto flex flex-col gap-2">
                       <span className="text-base font-bold text-black/90">
                         ${product.price.toFixed(2)}
@@ -318,7 +330,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#141414')}
                       >
-                        Cotizar
+                        {isEnglish ? 'Request quote' : 'Cotizar'}
                         <ArrowRight size={12} strokeWidth={2.5} />
                       </a>
                       <button
@@ -328,7 +340,7 @@ export default function CatalogPage({ onBack, onOpenAccount, onOpenCart }: Catal
                         style={{ borderColor: 'rgba(0,0,0,0.15)', color: '#141414' }}
                       >
                         <ShoppingBag size={12} strokeWidth={2.25} />
-                        Agregar al pedido
+                        {isEnglish ? 'Add to order' : 'Agregar al pedido'}
                       </button>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 // Todavía no hay dominio propio comprado (ver PENDIENTES.md) — se usa la URL
 // real y ya activa de Firebase Hosting para este proyecto
@@ -21,9 +22,13 @@ export interface SeoOptions {
  * restos de una página en la siguiente.
  */
 export function useSeo({ title, description, path, image }: SeoOptions) {
+  const { isEnglish } = useLanguage();
+
   useEffect(() => {
     const fullTitle = title.includes(SITE_NAME) ? title : `${title} — ${SITE_NAME}`;
-    const url = `${SITE_URL}${path}`;
+    const spanishPath = path.replace(/^\/en(?=\/|$)/, '') || '/';
+    const englishPath = `/en${spanishPath === '/' ? '' : spanishPath}`;
+    const url = `${SITE_URL}${isEnglish ? englishPath : spanishPath}`;
     const prevTitle = document.title;
     document.title = fullTitle;
 
@@ -34,6 +39,10 @@ export function useSeo({ title, description, path, image }: SeoOptions) {
       { selector: 'meta[property="og:description"]', attrs: { property: 'og:description', content: description } },
       { selector: 'meta[property="og:url"]', attrs: { property: 'og:url', content: url } },
       { selector: 'meta[property="og:type"]', attrs: { property: 'og:type', content: 'website' } },
+      { selector: 'meta[property="og:locale"]', attrs: { property: 'og:locale', content: isEnglish ? 'en_US' : 'es_EC' } },
+      { selector: 'link[rel="alternate"][hreflang="es"]', attrs: { rel: 'alternate', hreflang: 'es', href: `${SITE_URL}${spanishPath}` } },
+      { selector: 'link[rel="alternate"][hreflang="en"]', attrs: { rel: 'alternate', hreflang: 'en', href: `${SITE_URL}${englishPath}` } },
+      { selector: 'link[rel="alternate"][hreflang="x-default"]', attrs: { rel: 'alternate', hreflang: 'x-default', href: `${SITE_URL}${spanishPath}` } },
       { selector: 'meta[name="twitter:card"]', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       { selector: 'meta[name="twitter:title"]', attrs: { name: 'twitter:title', content: fullTitle } },
       { selector: 'meta[name="twitter:description"]', attrs: { name: 'twitter:description', content: description } },
@@ -64,7 +73,7 @@ export function useSeo({ title, description, path, image }: SeoOptions) {
       created.forEach((el) => el.remove());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, path, image]);
+  }, [title, description, path, image, isEnglish]);
 }
 
 /** Inyecta un bloque JSON-LD mientras el componente está montado y lo retira al salir. */

@@ -1,44 +1,56 @@
 import { Award, MapPin, Package, Palette, Scissors, Shirt, Sparkles, Stamp } from 'lucide-react';
 import Reveal from './layout/Reveal';
+import { useLanguage } from '../context/LanguageContext';
 
 const GOLD = '#C9973F';
 
 const STATS = [
-  { icon: Award, value: '20+', label: 'Años de experiencia en el mercado' },
-  { icon: Package, value: '100+', label: 'Productos personalizables' },
-  { icon: Sparkles, value: '5', label: 'Técnicas: confección, bordado, estampado, sublimado y serigrafía' },
-  { icon: MapPin, value: '100%', label: 'Hecho a pedido en Ecuador' },
+  { icon: Award, value: '20+', label: 'Años de experiencia en el mercado', labelEn: 'Years of experience' },
+  { icon: Package, value: '100+', label: 'Productos personalizables', labelEn: 'Customizable products' },
+  { icon: Sparkles, value: '5', label: 'Técnicas: confección, bordado, estampado, sublimado y serigrafía', labelEn: 'Techniques: manufacturing, embroidery, printing, sublimation and screen printing' },
+  { icon: MapPin, value: '100%', label: 'Hecho a pedido en Ecuador', labelEn: 'Made to order in Ecuador' },
 ];
 
 const TECHNIQUES = [
   {
     icon: Shirt,
     title: 'Confección',
+    titleEn: 'Garment manufacturing',
     desc: 'Fabricamos la prenda desde la tela: cortamos y cosemos uniformes, polos y ropa a medida, no solo decoramos prendas ya hechas.',
+    descEn: 'We make garments from the fabric up: cutting and sewing uniforms, polo shirts and custom clothing—not merely decorating ready-made pieces.',
   },
   {
     icon: Scissors,
     title: 'Bordado',
+    titleEn: 'Embroidery',
     desc: 'Hilo de alta duración para logos y escudos. Ideal para uniformes ejecutivos, corporativos y equipos de trabajo.',
+    descEn: 'Long-lasting thread for logos and crests. Ideal for executive and corporate uniforms and work teams.',
   },
   {
     icon: Sparkles,
     title: 'Estampado',
+    titleEn: 'Textile printing',
     desc: 'Diseños grandes de alto impacto en pecho o espalda. Perfecto para lanzamientos de marca y streetwear.',
+    descEn: 'Large, high-impact designs for the chest or back. Perfect for brand launches and streetwear.',
   },
   {
     icon: Palette,
     title: 'Sublimado',
+    titleEn: 'Sublimation',
     desc: 'Color de borde a borde, sin límite de tonos. Ideal para uniformes deportivos y marcas llamativas.',
+    descEn: 'Edge-to-edge color without shade limits. Ideal for sports uniforms and bold brands.',
   },
   {
     icon: Stamp,
     title: 'Serigrafía',
+    titleEn: 'Screen printing',
     desc: 'Impresión resistente en tela, ideal para tirajes grandes con uno o varios colores sólidos.',
+    descEn: 'Durable textile printing, ideal for large runs with one or several solid colors.',
   },
 ];
 
 export default function AboutSection() {
+  const { isEnglish } = useLanguage();
   return (
     <section
       className="w-full"
@@ -49,7 +61,7 @@ export default function AboutSection() {
           className="text-xs font-semibold uppercase tracking-widest"
           style={{ color: GOLD, letterSpacing: '0.18em' }}
         >
-          Quiénes somos
+          {isEnglish ? 'Who we are' : 'Quiénes somos'}
         </span>
         <h2
           className="mt-3 mb-6"
@@ -62,19 +74,17 @@ export default function AboutSection() {
             color: '#141414',
           }}
         >
-          Sobre Alburqtex
+          {isEnglish ? 'About Alburqtex' : 'Sobre Alburqtex'}
         </h2>
         <p className="text-sm sm:text-base text-black/60 max-w-2xl leading-relaxed mb-14">
-          Con más de 20 años en el mercado, somos un taller ecuatoriano de confección y
-          personalización textil. Fabricamos uniformes, polos y prendas a medida desde la tela, y
-          también trabajamos con negocios, empresas, instituciones y equipos que necesitan sus
-          artículos con su propio logo, nombre o escudo — con bordado, estampado grande, sublimado
-          100% o serigrafía, en los colores y cantidades que necesites.
+          {isEnglish
+            ? 'With more than 20 years in the market, we are an Ecuadorian garment manufacturing and textile customization workshop. We make uniforms, polo shirts and custom garments from the fabric up, and personalize items for businesses, companies, institutions and teams with their logo, name or crest through embroidery, large-format printing, full sublimation or screen printing—in the colors and quantities they need.'
+            : 'Con más de 20 años en el mercado, somos un taller ecuatoriano de confección y personalización textil. Fabricamos uniformes, polos y prendas a medida desde la tela, y también trabajamos con negocios, empresas, instituciones y equipos que necesitan sus artículos con su propio logo, nombre o escudo — con bordado, estampado grande, sublimado 100% o serigrafía, en los colores y cantidades que necesites.'}
         </p>
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20">
-          {STATS.map(({ icon: Icon, value, label }, i) => (
+          {STATS.map(({ icon: Icon, value, label, labelEn }, i) => (
             <Reveal key={label} delay={i * 90}>
               <Icon size={20} strokeWidth={2} style={{ color: GOLD }} className="mb-3" />
               <div
@@ -82,14 +92,14 @@ export default function AboutSection() {
               >
                 {value}
               </div>
-              <p className="text-xs sm:text-sm text-black/50 mt-2 leading-snug">{label}</p>
+              <p className="text-xs sm:text-sm text-black/50 mt-2 leading-snug">{isEnglish ? labelEn : label}</p>
             </Reveal>
           ))}
         </div>
 
         {/* Techniques */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-          {TECHNIQUES.map(({ icon: Icon, title, desc }, i) => (
+          {TECHNIQUES.map(({ icon: Icon, title, titleEn, desc, descEn }, i) => (
             <Reveal key={title} delay={i * 90}>
               <div
                 className="h-full rounded-2xl p-6 sm:p-7 bg-white border transition-shadow hover:shadow-md"
@@ -101,8 +111,8 @@ export default function AboutSection() {
                 >
                   <Icon size={20} strokeWidth={2} style={{ color: GOLD }} />
                 </div>
-                <h3 className="text-base font-semibold text-black/90 mb-2">{title}</h3>
-                <p className="text-sm text-black/55 leading-relaxed">{desc}</p>
+                <h3 className="text-base font-semibold text-black/90 mb-2">{isEnglish ? titleEn : title}</h3>
+                <p className="text-sm text-black/55 leading-relaxed">{isEnglish ? descEn : desc}</p>
               </div>
             </Reveal>
           ))}

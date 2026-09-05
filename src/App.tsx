@@ -9,6 +9,9 @@ import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { LanguageProvider } from './context/LanguageContext';
+import { useLanguage } from './context/LanguageContext';
+import { useSeo } from './lib/seo';
 
 // Las vistas internas de AppShell (catálogo, legal, acceso, cuenta, pedido)
 // también se cargan bajo demanda: quien solo entra al inicio no descarga el
@@ -66,9 +69,18 @@ type View = 'hero' | 'catalog' | 'legal' | 'auth' | 'account' | 'cart';
 
 function AppShell() {
   const { user } = useAuth();
+  const { isEnglish } = useLanguage();
   const [view, setView] = useState<View>('hero');
   const [authReturnView, setAuthReturnView] = useState<View>('hero');
   const [legalTarget, setLegalTarget] = useState<string | undefined>(undefined);
+
+  useSeo({
+    title: isEnglish ? 'Custom apparel and textile personalization' : 'Bordado y confección personalizada',
+    description: isEnglish
+      ? 'Garment manufacturing, embroidery, textile printing and sublimation in Guayaquil, Ecuador, for companies, institutions and individuals.'
+      : 'Confección, bordado, estampado y sublimado de alto nivel en Guayaquil para personas, instituciones y empresas.',
+    path: '/',
+  });
 
   // Catálogo, acceso, cuenta y pedido son vistas internas de la ruta principal;
   // también deben empezar arriba cuando se cambia entre ellas.
@@ -141,23 +153,30 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
-          <ScrollToTop />
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/legal" element={<LegalPageRoute />} />
-              <Route path="/preguntas-frecuentes" element={<FaqPage />} />
-              <Route path="/galeria" element={<GalleryPage />} />
-              <Route path="/guia-de-tallas" element={<SizeGuidePage />} />
-              <Route path="/clientes" element={<ClientsPage />} />
-              <Route path="/blog" element={<BlogIndexPage />} />
-              <Route path="/blog/:slug" element={<BlogPostPage />} />
-              <Route path="/admin/comentarios" element={<AdminCommentsPage />} />
-              {/* Todo lo demás (inicio, catálogo, carrito, cuenta, legal) sigue
-                  funcionando exactamente igual que antes, como una sola vista
-                  interna de AppShell — no se tocó su comportamiento. */}
-              <Route path="/*" element={<AppShell />} />
-            </Routes>
-          </Suspense>
+          <LanguageProvider>
+            <ScrollToTop />
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/legal" element={<LegalPageRoute />} />
+                <Route path="/preguntas-frecuentes" element={<FaqPage />} />
+                <Route path="/galeria" element={<GalleryPage />} />
+                <Route path="/guia-de-tallas" element={<SizeGuidePage />} />
+                <Route path="/clientes" element={<ClientsPage />} />
+                <Route path="/blog" element={<BlogIndexPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/admin/comentarios" element={<AdminCommentsPage />} />
+                <Route path="/en/legal" element={<LegalPageRoute />} />
+                <Route path="/en/preguntas-frecuentes" element={<FaqPage />} />
+                <Route path="/en/galeria" element={<GalleryPage />} />
+                <Route path="/en/guia-de-tallas" element={<SizeGuidePage />} />
+                <Route path="/en/clientes" element={<ClientsPage />} />
+                <Route path="/en/blog" element={<BlogIndexPage />} />
+                <Route path="/en/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/en/*" element={<AppShell />} />
+                <Route path="/*" element={<AppShell />} />
+              </Routes>
+            </Suspense>
+          </LanguageProvider>
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
