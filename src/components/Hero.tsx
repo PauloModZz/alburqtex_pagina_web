@@ -9,6 +9,7 @@ const GRAIN_DATA_URI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(GR
 
 const EASE = 'cubic-bezier(0.4,0,0.2,1)';
 const TRANSITION_MS = 650;
+const GHOST_REFERENCE_WORD = 'BORDADO';
 
 const GHOST_TEXT_STYLE: CSSProperties = {
   fontFamily: "'Anton', sans-serif",
@@ -86,9 +87,8 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
     ? ({ BORDADO: 'EMBROIDERY', ESTAMPADO: 'PRINTING', SUBLIMADO: 'SUBLIMATION' }[PRODUCTS[activeIndex].ghostWord] ?? PRODUCTS[activeIndex].ghostWord)
     : PRODUCTS[activeIndex].ghostWord;
 
-  // Usa la palabra española de cada técnica como caja de referencia. La
-  // traducción conserva exactamente su alto y se escala solo en horizontal
-  // para ocupar el mismo ancho, aunque tenga más o menos letras.
+  // Todas las técnicas, en ambos idiomas, usan la misma caja visual que
+  // BORDADO: altura idéntica y ancho fijo aunque cambie el número de letras.
   useLayoutEffect(() => {
     const measure = () => {
       const referenceWidth = referenceWordRef.current?.getBoundingClientRect().width ?? 0;
@@ -233,7 +233,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
           aria-hidden="true"
           style={{ ...GHOST_TEXT_STYLE, position: 'fixed', top: 0, left: 0, visibility: 'hidden' }}
         >
-          {active.ghostWord}
+          {GHOST_REFERENCE_WORD}
         </span>
         <span
           key={`${activeIndex}-${isEnglish ? 'en' : 'es'}`}
