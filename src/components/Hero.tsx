@@ -10,11 +10,6 @@ const GRAIN_DATA_URI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(GR
 const EASE = 'cubic-bezier(0.4,0,0.2,1)';
 const TRANSITION_MS = 650;
 
-// "BORDADO" es la palabra de referencia: todas las demás (ESTAMPADO,
-// SUBLIMADO...) se comprimen horizontalmente para calzar en su mismo ancho,
-// sin tocar el tamaño de fuente — así la altura del texto nunca cambia.
-const GHOST_REFERENCE_WORD = 'BORDADO';
-
 const GHOST_TEXT_STYLE: CSSProperties = {
   fontFamily: "'Anton', sans-serif",
   fontSize: 'clamp(90px, 28vw, 380px)',
@@ -87,22 +82,25 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
   const referenceWordRef = useRef<HTMLSpanElement>(null);
   const activeWordRef = useRef<HTMLSpanElement>(null);
   const [ghostScaleX, setGhostScaleX] = useState(1);
+  const ghostWord = isEnglish
+    ? ({ BORDADO: 'EMBROIDERY', ESTAMPADO: 'PRINTING', SUBLIMADO: 'SUBLIMATION' }[PRODUCTS[activeIndex].ghostWord] ?? PRODUCTS[activeIndex].ghostWord)
+    : PRODUCTS[activeIndex].ghostWord;
 
-  // Mide el ancho real (renderizado) de la palabra activa contra "BORDADO" y
-  // calcula cuánto hay que comprimirla en X para que ocupe exactamente el
-  // mismo ancho — con el mismo tamaño de fuente, así que el alto no cambia.
+  // Usa la palabra española de cada técnica como caja de referencia. La
+  // traducción conserva exactamente su alto y se escala solo en horizontal
+  // para ocupar el mismo ancho, aunque tenga más o menos letras.
   useLayoutEffect(() => {
     const measure = () => {
       const referenceWidth = referenceWordRef.current?.getBoundingClientRect().width ?? 0;
       const activeWidth = activeWordRef.current?.getBoundingClientRect().width ?? 0;
       if (referenceWidth > 0 && activeWidth > 0) {
-        setGhostScaleX(Math.min(1, referenceWidth / activeWidth));
+        setGhostScaleX(referenceWidth / activeWidth);
       }
     };
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [activeIndex, isMobile]);
+  }, [activeIndex, isMobile, isEnglish]);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
@@ -214,7 +212,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
           style={{ zIndex: 2, top: '6%' }}
         >
           <span
-            key={activeIndex}
+            key={`${activeIndex}-${isEnglish ? 'en' : 'es'}`}
             style={{
               ...GHOST_TEXT_STYLE,
               color: '#fff',
@@ -224,7 +222,7 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
               animation: `ghostFadeIn ${TRANSITION_MS}ms ${EASE}`,
             }}
           >
-            {isEnglish ? ({ BORDADO: 'EMBROIDERY', ESTAMPADO: 'PRINTING', SUBLIMADO: 'SUBLIMATION' }[active.ghostWord] ?? active.ghostWord) : active.ghostWord}
+            {ghostWord}
           </span>
         </div>
 
@@ -235,15 +233,15 @@ export default function Hero({ onOpenCatalog }: HeroProps) {
           aria-hidden="true"
           style={{ ...GHOST_TEXT_STYLE, position: 'fixed', top: 0, left: 0, visibility: 'hidden' }}
         >
-          {GHOST_REFERENCE_WORD}
+          {active.ghostWord}
         </span>
         <span
-          key={activeIndex}
+          key={`${activeIndex}-${isEnglish ? 'en' : 'es'}`}
           ref={activeWordRef}
           aria-hidden="true"
           style={{ ...GHOST_TEXT_STYLE, position: 'fixed', top: 0, left: 0, visibility: 'hidden' }}
         >
-          {active.ghostWord}
+          {ghostWord}
         </span>
 
         {/* Brand label */}
