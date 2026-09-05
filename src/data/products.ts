@@ -32,7 +32,7 @@ export const PRODUCTS: ShowcaseProduct[] = [
     material: 'Piqué 100% algodón',
     sizes: 'S — M — L — XL — XXL',
     price: 15,
-    tagline: 'Polo blanca premium con etiqueta Alburqtex, ribetes rojos y bordado pequeño en el pecho.',
+    tagline: 'Polo negra premium con etiqueta Alburqtex, ribetes blancos y bordado de hilo visible en el pecho.',
     ghostWord: 'BORDADO',
     src: poloBordado,
     bg: '#F4845F',
