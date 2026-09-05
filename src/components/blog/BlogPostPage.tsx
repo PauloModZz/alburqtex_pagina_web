@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowRight, Check, Clock, Link2, MessageCircle } from 'lucide-react';
 import PageHeader from '../layout/PageHeader';
@@ -19,6 +19,10 @@ export default function BlogPostPage() {
   const { slug } = useParams();
   const [copied, setCopied] = useState(false);
   const post = slug ? BLOG_POSTS_BY_SLUG[slug] : undefined;
+  const [activeId, setActiveId] = useState<string>('');
+  const sectionIds = post
+    ? (post.cuerpo.filter((b) => b.type === 'h2') as { id: string }[]).map((b) => b.id)
+    : [];
 
   useSeo(
     post
@@ -46,6 +50,26 @@ export default function BlogPostPage() {
         }
       : null,
   );
+
+  // Resalta en el índice lateral la sección que se está viendo — mismo
+  // efecto que en Legal y Guía de tallas.
+  useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [sectionIds.join(',')]);
 
   if (!post) return <Navigate to="/blog" replace />;
 
@@ -171,8 +195,16 @@ export default function BlogPostPage() {
               <p className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3">En este artículo</p>
               <ul className="space-y-2.5 border-l" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                 {toc.map((h) => (
-                  <li key={h.id} className="pl-3 -ml-px border-l-2 border-transparent hover:border-black/30">
-                    <a href={`#${h.id}`} className="text-xs text-black/55 hover:text-black transition-colors leading-snug block">
+                  <li key={h.id}>
+                    <a
+                      href={`#${h.id}`}
+                      className="text-xs transition-colors leading-snug block border-l-2 pl-3 -ml-px"
+                      style={
+                        activeId === h.id
+                          ? { color: '#141414', fontWeight: 700, borderColor: GOLD }
+                          : { color: 'rgba(0,0,0,0.55)', borderColor: 'transparent' }
+                      }
+                    >
                       {h.text}
                     </a>
                   </li>
