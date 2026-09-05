@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import PageHeader from '../layout/PageHeader';
@@ -10,6 +11,10 @@ import { useSeo } from '../../lib/seo';
 
 const GOLD = '#C9973F';
 const PAGE_SIZE = 9;
+const CATEGORY_GROUPS: { label: string; items: Categoria[] }[] = [
+  { label: 'Lo que hacemos', items: ['bordado', 'estampado', 'sublimacion', 'confeccion'] },
+  { label: 'Guías prácticas', items: ['antes-de-pedir', 'cuidados', 'para-empresas'] },
+];
 
 function formatFecha(iso: string) {
   return new Date(iso).toLocaleDateString('es-EC', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -27,6 +32,14 @@ export default function BlogIndexPage() {
   });
 
   const featured = BLOG_POSTS.find((p) => p.destacado) ?? BLOG_POSTS[0];
+  const categoryCounts = useMemo(
+    () =>
+      BLOG_POSTS.reduce<Partial<Record<Categoria, number>>>((counts, post) => {
+        counts[post.categoria] = (counts[post.categoria] ?? 0) + 1;
+        return counts;
+      }, {}),
+    [],
+  );
   const rest = useMemo(
     () =>
       BLOG_POSTS.filter((p) => p.slug !== featured.slug).filter((p) => !categoria || p.categoria === categoria),
@@ -42,35 +55,69 @@ export default function BlogIndexPage() {
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
-        <div className="mb-10 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setCategoria(null)}
-            className="text-xs font-semibold rounded-full px-3.5 py-2 border transition-colors"
-            style={
-              categoria === null
-                ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
-                : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
-            }
-          >
-            Todas
-          </button>
-          {(Object.keys(CATEGORIA_LABEL) as Categoria[]).map((cat) => (
+        <section
+          aria-label="Filtrar artículos por tema"
+          className="mb-12 overflow-hidden rounded-2xl border bg-white"
+          style={{ borderColor: 'rgba(0,0,0,0.08)' }}
+        >
+          <div className="flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: GOLD }}>Índice del taller</p>
+              <h2 className="mt-1 text-lg font-bold text-black/90">Explora por tema</h2>
+            </div>
             <button
-              key={cat}
               type="button"
-              onClick={() => setCategoria(cat)}
-              className="text-xs font-semibold rounded-full px-3.5 py-2 border transition-colors"
-              style={
-                categoria === cat
-                  ? { backgroundColor: '#141414', color: '#fff', borderColor: '#141414' }
-                  : { backgroundColor: 'transparent', color: '#141414', borderColor: 'rgba(0,0,0,0.15)' }
-              }
+              onClick={() => setCategoria(null)}
+              aria-pressed={categoria === null}
+              className="group inline-flex w-fit items-center gap-3 rounded-full border px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              style={{
+                backgroundColor: categoria === null ? '#141414' : '#FAF7F2',
+                color: categoria === null ? '#fff' : '#141414',
+                borderColor: categoria === null ? '#141414' : 'rgba(0,0,0,0.1)',
+                '--tw-ring-color': GOLD,
+              } as CSSProperties}
             >
-              {CATEGORIA_LABEL[cat]}
+              Ver todos
+              <span className={categoria === null ? 'text-white/55' : 'text-black/35'}>{BLOG_POSTS.length}</span>
             </button>
-          ))}
-        </div>
+          </div>
+
+          <div className="grid gap-0 sm:grid-cols-2 sm:divide-x" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
+            {CATEGORY_GROUPS.map((group) => (
+              <div key={group.label} className="min-w-0 px-5 py-5 sm:px-6">
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-black/35">{group.label}</p>
+                <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap">
+                  {group.items.map((cat) => {
+                    const active = categoria === cat;
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setCategoria(active ? null : cat)}
+                        aria-pressed={active}
+                        className="relative inline-flex shrink-0 items-center gap-2 overflow-hidden rounded-lg border px-3.5 py-2.5 text-xs font-semibold transition-all hover:-translate-y-0.5 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                        style={{
+                          backgroundColor: active ? '#141414' : '#fff',
+                          color: active ? '#fff' : '#141414',
+                          borderColor: active ? '#141414' : 'rgba(0,0,0,0.11)',
+                          '--tw-ring-color': GOLD,
+                        } as CSSProperties}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="h-4 w-0.5 rounded-full transition-colors"
+                          style={{ backgroundColor: active ? GOLD : 'rgba(201,151,63,0.38)' }}
+                        />
+                        {CATEGORIA_LABEL[cat]}
+                        <span className={active ? 'text-white/45' : 'text-black/30'}>{categoryCounts[cat] ?? 0}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
         {!categoria && (
           <Reveal>
           <Link
