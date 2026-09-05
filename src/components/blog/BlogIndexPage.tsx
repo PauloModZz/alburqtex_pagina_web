@@ -20,9 +20,9 @@ export default function BlogIndexPage() {
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   useSeo({
-    title: 'Blog — Confección y bordado',
+    title: 'Blog — Personalización y confección textil',
     description:
-      'Guías prácticas sobre confección de uniformes, bordado, archivos de logo, precios, cuidado de prendas y planificación de pedidos para empresas.',
+      'Guías prácticas sobre bordado, estampado, sublimación, confección textil, cuidados y planificación de uniformes para empresas.',
     path: '/blog',
   });
 
@@ -38,7 +38,7 @@ export default function BlogIndexPage() {
       <PageHeader
         eyebrow="Aprende"
         title="Blog"
-        description="Guías directas, sin relleno, sobre confección, bordado, archivos, precios, cuidados y uniformes para empresas."
+        description="Guías directas sobre bordado, estampado, sublimación, confección textil, cuidados y uniformes para empresas."
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">

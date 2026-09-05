@@ -1,8 +1,20 @@
-export type Categoria = 'antes-de-pedir' | 'tecnica' | 'cuidados' | 'para-empresas';
+import { BLOG_EXPANSION } from './blogExpansion';
+
+export type Categoria =
+  | 'antes-de-pedir'
+  | 'bordado'
+  | 'estampado'
+  | 'sublimacion'
+  | 'confeccion'
+  | 'cuidados'
+  | 'para-empresas';
 
 export const CATEGORIA_LABEL: Record<Categoria, string> = {
   'antes-de-pedir': 'Antes de pedir',
-  tecnica: 'Técnica',
+  bordado: 'Bordado',
+  estampado: 'Estampado',
+  sublimacion: 'Sublimación',
+  confeccion: 'Confección',
   cuidados: 'Cuidados',
   'para-empresas': 'Para empresas',
 };
@@ -180,7 +192,7 @@ export const BLOG_POSTS: BlogPost[] = [
     titulo: 'Qué es el ponchado y por qué se cobra aparte',
     imagen: '/blog/que-es-el-ponchado.jpg',
     imagenAlt: 'Programa de ponchado mostrando las rutas de puntada de un diseño geométrico',
-    categoria: 'tecnica',
+    categoria: 'bordado',
     extracto:
       'Es la pregunta que más genera confusión en la primera cotización: por qué hay un costo extra si "solo es bordar mi logo". Aquí explicamos qué es exactamente ese trabajo.',
     tiempoLectura: 6,
@@ -316,7 +328,7 @@ export const BLOG_POSTS: BlogPost[] = [
     titulo: 'Bordado en gorras: lo que debes saber antes de pedir',
     imagen: '/blog/bordado-en-gorras.jpg',
     imagenAlt: 'Gorra negra colocada en una máquina industrial durante el bordado',
-    categoria: 'tecnica',
+    categoria: 'bordado',
     extracto:
       'Estructurada o no estructurada, plano o 3D — la gorra es de las prendas más pedidas y de las que más dudas generan. Esto es lo que hay que saber antes de diseñar el logo.',
     tiempoLectura: 6,
@@ -455,7 +467,7 @@ export const BLOG_POSTS: BlogPost[] = [
     titulo: 'Guía de ubicaciones de bordado: dónde poner tu logo y por qué',
     imagen: '/blog/guia-ubicaciones-bordado.jpg',
     imagenAlt: 'Polo, gorra, manga y mandil con bordados ubicados en distintas zonas',
-    categoria: 'tecnica',
+    categoria: 'bordado',
     extracto:
       'Pecho izquierdo, espalda completa, manga, cuello posterior... cada ubicación comunica algo distinto y tiene su propio límite de tamaño. Aquí el recorrido completo.',
     tiempoLectura: 6,
@@ -600,7 +612,7 @@ export const BLOG_POSTS: BlogPost[] = [
     titulo: 'Confección de uniformes desde cero: así funciona el proceso',
     imagen: '/blog/confeccion-de-uniformes-desde-cero.jpg',
     imagenAlt: 'Mesa de confección con patrones, piezas cortadas y un uniforme terminado',
-    categoria: 'tecnica',
+    categoria: 'confeccion',
     extracto:
       'No solo bordamos y estampamos — también confeccionamos la prenda desde la tela. Así es el proceso completo, del patronaje a la prenda terminada, y cuándo tiene sentido pedirlo así en vez de personalizar algo ya hecho.',
     tiempoLectura: 7,
@@ -653,7 +665,7 @@ export const BLOG_POSTS: BlogPost[] = [
     titulo: '¿Confeccionar tu uniforme desde cero o personalizar uno ya hecho? Cómo elegir',
     imagen: '/blog/confeccion-vs-prenda-personalizada.jpg',
     imagenAlt: 'Comparación entre confeccionar una camisa y bordar una prenda ya terminada',
-    categoria: 'antes-de-pedir',
+    categoria: 'confeccion',
     extracto:
       'Las dos opciones dan un uniforme con tu logo — pero no cuestan lo mismo, ni tardan lo mismo, ni te dan el mismo control. Comparamos costo, plazo, exclusividad y cantidad mínima para que decidas con información real.',
     tiempoLectura: 6,
@@ -702,6 +714,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  ...BLOG_EXPANSION,
 ];
 
 export const BLOG_POSTS_BY_SLUG: Record<string, BlogPost> = Object.fromEntries(

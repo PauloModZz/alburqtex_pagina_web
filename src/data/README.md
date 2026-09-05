@@ -14,7 +14,7 @@ vez de fallar en silencio ya publicado.
 | `tallas.ts` | Tablas de tallas por tipo de prenda | `/guia-de-tallas` |
 | `tejidos.ts` | Comparativa de tejidos y ubicaciones de bordado | `/guia-de-tallas` |
 | `clientes.ts` | Logos de clientes reales | `/clientes` y el inicio |
-| `blog.ts` | Los 8 artículos del blog | `/blog` |
+| `blog.ts` y `blogExpansion.ts` | Artículos de bordado, estampado, sublimación y confección | `/blog` |
 | `products.ts` | Ya existía — productos del carrusel del inicio | Inicio |
 | `catalog.ts` | Ya existía — catálogo de productos | `/catalogo` |
 | `legal.ts` | Ya existía — términos, privacidad, cookies | `/legal` |
