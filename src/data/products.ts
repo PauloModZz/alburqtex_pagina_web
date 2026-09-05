@@ -1,6 +1,6 @@
-import poloBordado from '../assets/products/hero-v2/bordado.webp';
+import poloBordado from '../assets/products/hero-v2/bordado-polo-alburqtex.png';
 import camisetaEstampada from '../assets/products/hero-v2/estampado-oversize-alburqtex.png';
-import camisetaSublimada from '../assets/products/hero-v2/sublimado.webp';
+import camisetaSublimada from '../assets/products/hero-v2/sublimado-ecuador-alburqtex.png';
 
 // Enlace de contacto tomado de la hoja CONFIG del inventario (INVENTARIO.xlsx).
 export const WHATSAPP_LINK = 'https://wa.me/message/DKEOUHOXAO5QI1';
@@ -27,12 +27,12 @@ export interface ShowcaseProduct {
 export const PRODUCTS: ShowcaseProduct[] = [
   {
     sku: 'BRD-011',
-    name: 'Polo Piqué Bordado',
+    name: 'Polo Alburqtex Bordada',
     category: 'Polos',
     material: 'Piqué 100% algodón',
     sizes: 'S — M — L — XL — XXL',
     price: 15,
-    tagline: 'Clásico corporativo con acabado premium. Bordado de logo en pecho, ideal para uniformes de oficina.',
+    tagline: 'Polo blanca premium con etiqueta Alburqtex, ribetes rojos y bordado pequeño en el pecho.',
     ghostWord: 'BORDADO',
     src: poloBordado,
     bg: '#F4845F',
@@ -55,12 +55,12 @@ export const PRODUCTS: ShowcaseProduct[] = [
   },
   {
     sku: 'SUB-001',
-    name: 'Camiseta 100% Sublimada',
+    name: 'Camiseta Ecuador Sublimada',
     category: 'Camisetas',
     material: 'Poliéster sublimable de secado rápido',
     sizes: 'S — M — L — XL — XXL',
     price: 14,
-    tagline: 'Diseño integral de borde a borde, sin límite de colores. Ideal para equipos y marcas llamativas.',
+    tagline: 'Diseño deportivo negro inspirado en Ecuador, con detalles tricolor, patrón sublimado y marca Alburqtex.',
     ghostWord: 'SUBLIMADO',
     src: camisetaSublimada,
     bg: '#6EB5FF',
